@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Block.cs" />
-     <Compile Include="Assets\Scripts\DragingScript.cs" />
+     <Compile Include="Assets\Scripts\Game.cs" />
      <Compile Include="Assets\Scripts\GridScript.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/conno/Documents/Barriers/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
