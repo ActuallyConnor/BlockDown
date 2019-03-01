@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3125172276722370299}
   - component: {fileID: 3125172276722370298}
   m_Layer: 0
-  m_Name: mino_l (1)
+  m_Name: L1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3125172277259883481}
   - component: {fileID: 3125172277259883480}
   m_Layer: 0
-  m_Name: mino_l (2)
+  m_Name: L2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,11 +168,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4352688721186265604}
   - component: {fileID: 4352688721186265605}
-  - component: {fileID: 4352688721186265626}
   - component: {fileID: 4352688721186265627}
+  - component: {fileID: 4352688721186265626}
+  - component: {fileID: 8617184800700994194}
   m_Layer: 0
   m_Name: L
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,7 +185,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4352688721186265624}
-  m_LocalRotation: {x: 0, y: -0, z: 0.7071068, w: -0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.94, y: -3.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -192,7 +193,7 @@ Transform:
   - {fileID: 3125172277259883481}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4352688721186265605
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -241,19 +242,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &4352688721186265626
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4352688721186265624}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 0.2}
-  m_Center: {x: 0.5, y: -0.5, z: 0}
 --- !u!114 &4352688721186265627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,3 +263,31 @@ MonoBehaviour:
   shape: L
   canRotate: 1
   limitRotate: 0
+  count: 0
+  objs: []
+--- !u!65 &4352688721186265626
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4352688721186265624}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 0.2}
+  m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!65 &8617184800700994194
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4352688721186265624}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000002, y: 1.0000002, z: 0.2}
+  m_Center: {x: 1, y: -1, z: 0}

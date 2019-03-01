@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 231855096942723924}
   - component: {fileID: 231855096942723927}
-  - component: {fileID: 231855096942723929}
   - component: {fileID: 231855096942723926}
+  - component: {fileID: 231855096942723929}
   m_Layer: 0
   m_Name: Two
   m_TagString: Untagged
@@ -82,19 +82,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &231855096942723929
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231855096942723928}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 0.2}
-  m_Center: {x: 0.5, y: 0, z: 0}
 --- !u!114 &231855096942723926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +103,21 @@ MonoBehaviour:
   shape: Two
   canRotate: 1
   limitRotate: 1
+  count: 0
+  objs: []
+--- !u!65 &231855096942723929
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231855096942723928}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1, z: 0.2}
+  m_Center: {x: 0.5, y: 0, z: 0}
 --- !u!1 &7474227133545292054
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +129,7 @@ GameObject:
   - component: {fileID: 7474227133545292055}
   - component: {fileID: 7474227133545292052}
   m_Layer: 0
-  m_Name: mino_z (1)
+  m_Name: Two2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

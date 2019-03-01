@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1408995304066093901}
   - component: {fileID: 1408995304066093898}
   m_Layer: 0
-  m_Name: MinoGrid (1)
+  m_Name: T1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1408995304134428496}
   - component: {fileID: 1408995304134428497}
   m_Layer: 0
-  m_Name: MinoGrid (3)
+  m_Name: T3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 1408995305048229489}
   - component: {fileID: 1408995305048229390}
   m_Layer: 0
-  m_Name: MinoGrid (2)
+  m_Name: T2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,11 +247,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1408995305079612697}
   - component: {fileID: 1408995305079612696}
-  - component: {fileID: 1408995305079612699}
   - component: {fileID: 1408995305079612698}
+  - component: {fileID: 1408995305079612699}
+  - component: {fileID: 2765830326136495775}
   m_Layer: 0
   m_Name: T
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -321,19 +322,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &1408995305079612699
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1408995305079612701}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.0260043, y: 2.0212374, z: 0.2}
-  m_Center: {x: 1.0130022, y: -0.5106187, z: 0}
 --- !u!114 &1408995305079612698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,3 +343,31 @@ MonoBehaviour:
   shape: T
   canRotate: 1
   limitRotate: 0
+  count: 0
+  objs: []
+--- !u!65 &1408995305079612699
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408995305079612701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 1, z: 0.2}
+  m_Center: {x: 1, y: 0, z: 0}
+--- !u!65 &2765830326136495775
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408995305079612701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 1, y: -1, z: 0}

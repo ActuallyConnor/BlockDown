@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Block
+  - SubT
+  - SubL
+  - SubLine
+  - SubTwo
+  - SubDot
+  - Square
   layers:
   - Default
   - TransparentFX
@@ -13,7 +20,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Top
   - 
   - 
   - 
@@ -43,4 +50,7 @@ TagManager:
     locked: 0
   - name: Blocks
     uniqueID: 2495697987
+    locked: 0
+  - name: Top
+    uniqueID: 1798582245
     locked: 0
