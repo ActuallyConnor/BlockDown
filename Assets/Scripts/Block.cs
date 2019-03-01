@@ -16,13 +16,17 @@ public class Block : MonoBehaviour {
 
     public bool draggingMode = false; // is draggable at that moment in time
 
-    public string shape = ""; // what shape is this
+    public string shape = ""; // what shape is this   
 
-    public GridScript wall = new GridScript(); // gridscript with coordinates
-    public List<int[]> used = new List<int[]>(); // used coordinates pulled from GridScript
+    public GameObject[] used;
 
     public GameObject[] objs; // array of all GameObjects on the screen that are active
-    Vector3 pos = new Vector3(-1, -3, 0); // default block position
+
+    Vector3 TPos = new Vector3(-4, -6, 0);
+    Vector3 LPos = new Vector3(0, -6, 0);
+    Vector3 LinePos = new Vector3(3, -6, 0);
+    Vector3 TwoPos = new Vector3(-2, -9, 0);
+    Vector3 DotPos = new Vector3(2, -9, 0);
 
     bool TFirst = true; // TShape's first move
     bool LFirst = true; // LShape's first move
@@ -35,45 +39,11 @@ public class Block : MonoBehaviour {
     Renderer blockRender2;
     Renderer blockRender3;
 
-    int[,] TDefault = new int[4, 2] { // list of TShape's default coordinates
-        { -1, -3 },
-        { 0, -3 },
-        { 1, -3 },
-        { 0, -4 }
-    };
-    int[,] TSetPos = new int[4, 2] {
-        { 0, 0 },
-        { 1, 0 },
-        { 2, 0 },
-        { 1, -1 }
-    };
-    int[,] TPos = new int[4, 2] {
-        { 0, 0 },
-        { 1, 0 },
-        { 2, 0 },
-        { 1, -1 }
-    };
-
-    int[,] LDefault = new int[3, 2] { // list of LShape's default coordinates
-        { -1, -3 },
-        { -1, -4 },
-        { 0, -4 }
-    };
-
-    int[,] DotDefault = new int[1, 2] {
-        { -1, -3 }
-    };
-
-    int[,] LineDefault = new int[3, 2] {
-        { -1, -3 },
-        { 0, -3 },
-        { 1, -3 }
-    };
-
-    int[,] TwoDefault = new int[2, 2] {
-        { -1, -3 },
-        { 0, -3 }
-    };
+    public bool TSnap = false;
+    public bool LSnap = false;
+    public bool LineSnap = false;
+    public bool TwoSnap = false;
+    public bool DotSnap = false;
 
 
     public bool canRotate = true; // shape can rotate
@@ -81,17 +51,27 @@ public class Block : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        used = wall.GetUsedSpots();
-        objs = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < objs.Length; i++) {
-            if (objs[i].name == "T") {
-                objs[i].transform.position = pos;
-            }
-        }        
+        used = FindObjectOfType<Wall>().GetGrid();
+        objs = GameObject.FindGameObjectsWithTag("Block");               
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update() {   
+        /*if (TSnap) {
+            GameObject.Find("T").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        }
+        if (LSnap) {
+            GameObject.Find("L").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        }
+        if (LineSnap) {
+            GameObject.Find("Line").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        }
+        if (TwoSnap) {
+            GameObject.Find("Two").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        }
+        if (DotSnap) {
+            GameObject.Find("Dot").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        }*/
     }
     
     string GetShape() => shape; // returns the shape in question
@@ -135,6 +115,7 @@ public class Block : MonoBehaviour {
                 blockRender1.sortingLayerName = "Top";
                 blockRender2.sortingLayerName = "Top";
                 blockRender3.sortingLayerName = "Top";
+                TSnap = false;
                 break;
             case "L":
                 blockRender = GameObject.Find("L").GetComponent<Renderer>();
@@ -143,6 +124,7 @@ public class Block : MonoBehaviour {
                 blockRender.sortingLayerName = "Top";
                 blockRender1.sortingLayerName = "Top";
                 blockRender2.sortingLayerName = "Top";
+                LSnap = false;
                 break;
             case "Line":
                 blockRender = GameObject.Find("Line").GetComponent<Renderer>();
@@ -151,16 +133,19 @@ public class Block : MonoBehaviour {
                 blockRender.sortingLayerName = "Top";
                 blockRender1.sortingLayerName = "Top";
                 blockRender2.sortingLayerName = "Top";
+                LineSnap = false;
                 break;
             case "Two":
                 blockRender = GameObject.Find("Two").GetComponent<Renderer>();
                 blockRender1 = GameObject.Find("Two1").GetComponent<Renderer>();
                 blockRender.sortingLayerName = "Top";
                 blockRender1.sortingLayerName = "Top";
+                TwoSnap = false;
                 break;
             case "Dot":
                 blockRender = GameObject.Find("Dot").GetComponent<Renderer>();
                 blockRender.sortingLayerName = "Top";
+                DotSnap = false;
                 break;
         }
     }
@@ -210,50 +195,55 @@ public class Block : MonoBehaviour {
         switch (GetShape()) {
             case "T":
                 TShape();                
-                if (gameObjectToDrag.transform.position != pos && TFirst == true) {
+                if (gameObjectToDrag.transform.position != TPos && TFirst == true) {
                     for (int i = 0; i < objs.Length; i++) {
                         if (objs[i].name == "L") {
-                            objs[i].transform.position = pos;
+                            objs[i].transform.position = TPos;
                         }
                     }
-                    TFirst = false;                    
+                    TFirst = false;
+                    TSnap = true;
                 }
                 break;
             case "L":
                 LShape();                
-                if (gameObjectToDrag.transform.position != pos && LFirst == true) {
+                if (gameObjectToDrag.transform.position != LPos && LFirst == true) {
                     for (int i = 0; i < objs.Length; i++) {
                         if (objs[i].name == "Line") {
-                            objs[i].transform.position = pos;
+                            objs[i].transform.position = LPos;
                         }
                     }
                     LFirst = false;
+                    LSnap = true;
                 }
                 break;
             case "Line":
                 Line();
-                if (gameObjectToDrag.transform.position != pos && LineFirst == true) {
+                if (gameObjectToDrag.transform.position != LinePos && LineFirst == true) {
                     for (int i = 0; i < objs.Length; i++) {
                         if (objs[i].name == "Two") {
-                            objs[i].transform.position = pos;
+                            objs[i].transform.position = LinePos;
                         }
                     }
                     LineFirst = false;
+                    LineSnap = true;
                 }
                 break;
             case "Two":
                 Two();
-                if (gameObjectToDrag.transform.position != pos && TwoFirst == true) {
+                if (gameObjectToDrag.transform.position != TwoPos && TwoFirst == true) {
                     for (int i = 0; i < objs.Length; i++) {
                         if (objs[i].name == "Dot") {
-                            objs[i].transform.position = pos;
+                            objs[i].transform.position = TwoPos;
                         }
                     }
                     TwoFirst = false;
+                    TwoSnap = true;
                 }
                 break;
             case "Dot":
                 Dot();
+                DotSnap = true;
                 break;
         }
     }
@@ -262,18 +252,18 @@ public class Block : MonoBehaviour {
     public void TShape() {        
         switch ((int)gameObjectToDrag.transform.rotation.eulerAngles.z) {
             case 0:               
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) + 2 > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) + 2 > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);                        
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside of grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
+                    } else if (used[i].transform.position.x == Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 2 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 2,0
+                    } else if (used[i].transform.position.x == Mathf.Round(gameObjectToDrag.transform.position.x) + 2 && used[i].transform.position.y == Mathf.Round(gameObjectToDrag.transform.position.y)) { // 2,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 1,-1
+                    } else if (used[i].transform.position.x == Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 1,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -281,18 +271,18 @@ public class Block : MonoBehaviour {
                 }                
                 break;
             case 90:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) + 2 > 8) { // if y coords go outside of grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) + 2 > used[0].transform.position.y) { // if y coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 2) { // 0,2
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 2) { // 0,2
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 1,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 1,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -300,18 +290,18 @@ public class Block : MonoBehaviour {
                 }
                 break;
             case 180:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 2 < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 2 < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > 8) { // if y coords go outside of grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > used[0].transform.position.y) { // if y coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -1,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 2 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -2,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 2 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -2,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // -1,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // -1,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -319,18 +309,18 @@ public class Block : MonoBehaviour {
                 }
                 break;
             case 270:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 2 < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside of grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 2 < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 0,-1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 0,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 2) { // 0,-2
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 2) { // 0,-2
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // -1,-1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // -1,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -367,16 +357,16 @@ public class Block : MonoBehaviour {
     public void LShape() {
         switch ((int)gameObjectToDrag.transform.rotation.eulerAngles.z) {
             case 0:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 0,-1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 0,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 1,-1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // 1,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -384,16 +374,16 @@ public class Block : MonoBehaviour {
                 }                
                 break;
             case 90:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) + 1 > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 1,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 1,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -401,16 +391,16 @@ public class Block : MonoBehaviour {
                 }
                 break;
             case 180:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) + 1 > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // -1,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // -1,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -418,16 +408,16 @@ public class Block : MonoBehaviour {
                 }
                 break;
             case 270:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) - 1 < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) - 1 < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -1,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // -1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // -1,-1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) - 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) - 1) { // -1,-1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -462,12 +452,12 @@ public class Block : MonoBehaviour {
     }
 
     public void Dot() {
-        for (int i = 0; i < used.Count; i++) {
-            if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+        for (int i = 0; i < used.Length; i++) {
+            if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                 gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-            } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+            } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                 gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-            } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+            } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                 gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
             } else {
                 gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -502,16 +492,16 @@ public class Block : MonoBehaviour {
     public void Line() {
         switch ((int)gameObjectToDrag.transform.rotation.eulerAngles.z) {
             case 0:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 2 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 2,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 2 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 2,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -519,16 +509,16 @@ public class Block : MonoBehaviour {
                 }                
                 break;
             case 90:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 2) { // 0,2
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 2) { // 0,2
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -565,14 +555,14 @@ public class Block : MonoBehaviour {
     public void Two() {
         switch ((int)gameObjectToDrag.transform.rotation.eulerAngles.z) {
             case 0:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) + 1 && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 1,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);
@@ -580,14 +570,14 @@ public class Block : MonoBehaviour {
                 }
                 break;
             case 90:
-                for (int i = 0; i < used.Count; i++) {
-                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -3 || Mathf.Round(gameObjectToDrag.transform.position.x) > 3) { // if x coords go outside of grid
+                for (int i = 0; i < used.Length; i++) {
+                    if (Mathf.Round(gameObjectToDrag.transform.position.x) < -4 || Mathf.Round(gameObjectToDrag.transform.position.x) > 5) { // if x coords go outside of grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < 0 || Mathf.Round(gameObjectToDrag.transform.position.y) > 8) { // if y coords go outside the grid
+                    } else if (Mathf.Round(gameObjectToDrag.transform.position.y) < used[used.Length-1].transform.position.y || Mathf.Round(gameObjectToDrag.transform.position.y) > used[0].transform.position.y) { // if y coords go outside the grid
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y)) { // 0,0
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
-                    } else if (used[i][0] == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i][1] == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
+                    } else if (used[i].transform.position.x == (int)Mathf.Round(gameObjectToDrag.transform.position.x) && used[i].transform.position.y == (int)Mathf.Round(gameObjectToDrag.transform.position.y) + 1) { // 0,1
                         gameObjectToDrag.transform.position = new Vector3(GOCentre.x, GOCentre.y, GOCentre.z);
                     } else {
                         gameObjectToDrag.transform.position = new Vector3(Mathf.Round(gameObjectToDrag.transform.position.x), Mathf.Round(gameObjectToDrag.transform.position.y), GOCentre.z);

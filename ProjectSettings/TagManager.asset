@@ -10,6 +10,7 @@ TagManager:
   - SubLine
   - SubTwo
   - SubDot
+  - Square
   layers:
   - Default
   - TransparentFX
