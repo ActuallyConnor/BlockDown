@@ -17,6 +17,7 @@ public class Block : MonoBehaviour {
     public Vector3 LinePos;
     public Vector3 TwoPos;
     public Vector3 DotPos;
+    public Vector3 SquarePos;
     public int pieces = 0;
     List<Vector3> roundWall;
     List<Vector3> wall;
@@ -25,15 +26,15 @@ public class Block : MonoBehaviour {
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
         LPos = new Vector3(-3, -6, 0);
-        DotPos = new Vector3((float)3.5, (float)-6.5, 0);
-        LinePos = new Vector3((float)-2.5, -9, 0);
-        TwoPos = new Vector3((float)1.5, -9, 0);
+        SquarePos = new Vector3(3, -6, 0);
+
+        LinePos = new Vector3((float)-3.5, -9, 0);
+        TwoPos = new Vector3((float)0.5, -9, 0);
+        DotPos = new Vector3((float)3.5, (float)-9, 0);
     }
 
     // Update is called once per frame
     void Update() {
-        //roundWall = FindObjectOfType<Wall>().GetRoundGrid();
-        //wall = FindObjectOfType<Wall>().GetGrid();
         if (snap && GameObject.Find("Grid").transform.position.y > 0) {
             GameObject.Find(gameObjectToDrag.name).transform.Translate(Vector3.down * Time.deltaTime, Space.World);
         }
@@ -102,11 +103,14 @@ public class Block : MonoBehaviour {
             case "Dot":
                 gameObjectToDrag.transform.position = DotPos;
                 break;
+            case "Square":
+                gameObjectToDrag.transform.position = SquarePos;
+                break;
         }
     }
 
     void Overlap() {
-        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot" };
+        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
         List<Vector3> onBoard = new List<Vector3>();
         foreach (string shape in shapes) {
