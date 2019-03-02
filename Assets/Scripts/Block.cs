@@ -5,33 +5,37 @@ using UnityEngine;
 public class Block : MonoBehaviour {
 
     public GameObject gameObjectToDrag; // refer to GO that is being dragged
-
     public Vector3 GOCentre;
     public Vector3 touchPosition; // touch or click position
     public Vector3 offset; // vector between touchpoint and object centre
     public Vector3 newGOCentre; // new centre of GO after move
-
     RaycastHit hit; // store hit object info
-
-    public bool draggingMode = false; // is draggable at that moment in time
-
-    public Vector3[] tetris;
-    public List<Vector3> roundWall;
-    public List<Vector3> wall;
-
+    public bool draggingMode = false; // is draggable at that moment in time    
     public bool snap = false;
-
     public Vector3 TPos;
+    public Vector3 LPos;
+    public Vector3 LinePos;
+    public Vector3 TwoPos;
+    public Vector3 DotPos;
+    public int pieces = 0;
+    List<Vector3> roundWall;
+    List<Vector3> wall;
 
     // Start is called before the first frame update
     void Start() {
-        TPos = GameObject.Find("T").transform.position;
+        TPos = new Vector3((float)-0.5, -6, 0);
+        LPos = new Vector3(-3, -6, 0);
+        DotPos = new Vector3((float)3.5, (float)-6.5, 0);
+        LinePos = new Vector3((float)-2.5, -9, 0);
+        TwoPos = new Vector3((float)1.5, -9, 0);
     }
 
     // Update is called once per frame
     void Update() {
+        //roundWall = FindObjectOfType<Wall>().GetRoundGrid();
+        //wall = FindObjectOfType<Wall>().GetGrid();
         if (snap && GameObject.Find("Grid").transform.position.y > 0) {
-            GameObject.Find("T").transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+            GameObject.Find(gameObjectToDrag.name).transform.Translate(Vector3.down * Time.deltaTime, Space.World);
         }
     }
 
@@ -44,7 +48,8 @@ public class Block : MonoBehaviour {
             touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // sets the position in which the mouse clicked, used for the offset
             offset = touchPosition - GOCentre; // sets the offset between the click position and the centre of the object before the move
             draggingMode = true; // object is now draggable
-        }
+            SendToTop();
+        }       
     }
 
     void OnMouseDrag() { // as mouse is moving
@@ -56,25 +61,128 @@ public class Block : MonoBehaviour {
     }
 
     void OnMouseUp() {
-        draggingMode = false;
-        TShape();
+        draggingMode = false;        
+        Shape();
+        Overlap();
+        SendToBottom();
     }
 
-    void TShape() {
+    void SendToTop() {
+        GameObject.Find(gameObjectToDrag.name).GetComponent<Renderer>().sortingLayerName = "Top";
+        if (pieces > 1) {
+            for (int i = 1; i < pieces; i++) {
+                GameObject.Find(gameObjectToDrag.name + i).GetComponent<Renderer>().sortingLayerName = "Top";
+            }
+        }
+    }
+
+    void SendToBottom() {
+        GameObject.Find(gameObjectToDrag.name).GetComponent<Renderer>().sortingLayerName = "Blocks";
+        if (pieces > 1) {
+            for (int i = 1; i < pieces; i++) {
+                GameObject.Find(gameObjectToDrag.name + i).GetComponent<Renderer>().sortingLayerName = "Blocks";
+            }
+        }
+    }
+
+    void Reset() {
+        switch (gameObjectToDrag.name) {
+            case "T":
+                gameObjectToDrag.transform.position = TPos;
+                break;
+            case "L":
+                gameObjectToDrag.transform.position = LPos;
+                break;
+            case "Line":
+                gameObjectToDrag.transform.position = LinePos;
+                break;
+            case "Two":
+                gameObjectToDrag.transform.position = TwoPos;
+                break;
+            case "Dot":
+                gameObjectToDrag.transform.position = DotPos;
+                break;
+        }
+    }
+
+    void Overlap() {
+        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot" };
+        List<Vector3> piece = new List<Vector3>();
+        List<Vector3> onBoard = new List<Vector3>();
+        foreach (string shape in shapes) {
+            if (Equals(shape, gameObjectToDrag.name)) {
+                piece.Add(GameObject.Find(shape).transform.position);
+                for (int i = 1; i < pieces; i++) {
+                    piece.Add(GameObject.Find(shape + i).transform.position);
+                }
+            } else {
+                onBoard.Add(GameObject.Find(shape).transform.position);
+                for (int i = 1; i < 5; i++) {
+                    if (GameObject.Find(shape + i) != null) {
+                        onBoard.Add(GameObject.Find(shape + i).transform.position);
+                    }
+                }
+            }
+        }        
+        for (int i = 0; i < piece.Count; i++) {
+            for (int j = 0; j < onBoard.Count; j++) {
+                if (piece[i] == onBoard[j]) {
+                    Reset();
+                }
+            }
+        }
+    }
+    
+    void Shape() {
         roundWall = FindObjectOfType<Wall>().GetRoundGrid();
         wall = FindObjectOfType<Wall>().GetGrid();
-        tetris = new Vector3[] {
-            new Vector3(Mathf.Round(GameObject.Find("T").transform.position.x), Mathf.Round(GameObject.Find("T").transform.position.y), 0),
-            new Vector3(Mathf.Round(GameObject.Find("T1").transform.position.x), Mathf.Round(GameObject.Find("T1").transform.position.y), 0),
-            new Vector3(Mathf.Round(GameObject.Find("T2").transform.position.x), Mathf.Round(GameObject.Find("T2").transform.position.y), 0),
-            new Vector3(Mathf.Round(GameObject.Find("T3").transform.position.x), Mathf.Round(GameObject.Find("T3").transform.position.y), 0)
+        List<Vector3> shape = new List<Vector3> {
+            new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name).transform.position.y), 0)
         };
-        if (roundWall.Contains(tetris[0]) && roundWall.Contains(tetris[1]) && roundWall.Contains(tetris[2]) && roundWall.Contains(tetris[3])) {
-            gameObjectToDrag.transform.position = wall[roundWall.IndexOf(tetris[0])];
-            snap = true;
-        } else {
-            gameObjectToDrag.transform.position = TPos;
-            snap = false;
+        if (pieces > 1) {
+            for (int i = 1; i < 5; i++) {
+                if (GameObject.Find(gameObjectToDrag.name + i) != null) {
+                    shape.Add(new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.y), 0));
+                }
+            }
         }
-    }  
+        switch (pieces) {
+            case 1:
+                if (roundWall.Contains(shape[0])) {
+                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                    snap = true;
+                } else {
+                    Reset();
+                    snap = false;
+                }
+                break;
+            case 2:
+                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1])) {
+                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                    snap = true;
+                } else {
+                    Reset();
+                    snap = false;
+                }
+                break;
+            case 3:
+                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2])) {
+                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                    snap = true;
+                } else {
+                    Reset();
+                    snap = false;
+                }
+                break;
+            case 4:
+                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2]) && roundWall.Contains(shape[3])) {
+                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                    snap = true;
+                } else {
+                    Reset();
+                    snap = false;
+                }
+                break;
+        }
+    }
 }

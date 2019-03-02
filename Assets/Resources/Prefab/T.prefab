@@ -340,11 +340,12 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   newGOCentre: {x: 0, y: 0, z: 0}
   draggingMode: 0
-  shape: T
-  canRotate: 1
-  limitRotate: 0
-  count: 0
-  objs: []
+  tetris: []
+  roundWall: []
+  wall: []
+  snap: 0
+  pos: {x: 0, y: 0, z: 0}
+  pieces: 4
 --- !u!65 &1408995305079612699
 BoxCollider:
   m_ObjectHideFlags: 0
