@@ -9,25 +9,14 @@ public class Wall : MonoBehaviour {
     public List<Vector3> roundGrid = new List<Vector3>();
     public List<Vector3> grid = new List<Vector3>();
     public bool stop = false;
-    public int[] active = new int[] {
-        12, 13, 14, 16, 17, 
-        23, 25, 26, 
-        32, 33, 34, 36, 37
-    };
-    public int[] inactive = new int[] {
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-        10, 11, 15, 18, 19,
-        20, 21, 22, 24, 27, 28, 29,
-        30, 31, 35, 38, 39,
-        40, 41, 42, 43, 44, 45, 46, 47, 48, 49
-    };
+    Setup setups = new Setup();
 
     // Start is called before the first frame update
     void Start() {
-        foreach (int i in active) {
+        foreach (int i in setups.GetPreset(0)) {
             GameObject.Find("Grid (" + i + ")").SetActive(false);            
         }
-        foreach (int i in inactive) {
+        foreach (int i in setups.GetBoard(0)) {
             GameObject.Find("Square (" + i + ")").SetActive(false);
         }        
         //GameObject.Find("Square (" + 0 + ")").SetActive(false);
