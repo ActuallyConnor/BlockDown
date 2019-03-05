@@ -9,17 +9,15 @@ public class Wall : MonoBehaviour {
     public List<Vector3> roundGrid = new List<Vector3>();
     public List<Vector3> grid = new List<Vector3>();
     public bool stop = false;
-    public Setups setups = new Setups();
-    public int[] active;
-    public List<int> baseWall = new List<int>();
+    Setup setups = new Setup();
 
     // Start is called before the first frame update
-    void Start() {        
-        foreach (int j in setups.GetWall(0)) {
-            GameObject.Find("Square (" + j + ")").SetActive(false);
-        }
-        foreach (int i in setups.GetSetup(0)) {
+    void Start() {
+        foreach (int i in setups.GetPreset(0)) {
             GameObject.Find("Grid (" + i + ")").SetActive(false);
+        }
+        foreach (int i in setups.GetBoard(0)) {
+            GameObject.Find("Square (" + i + ")").SetActive(false);
         }
         //GameObject.Find("Square (" + 0 + ")").SetActive(false);
         squares = GameObject.FindGameObjectsWithTag("Blank");
@@ -44,7 +42,7 @@ public class Wall : MonoBehaviour {
         }
     }
 
-    public List<Vector3> GetRoundGrid() {        
+    public List<Vector3> GetRoundGrid() {
         return roundGrid;
     }
 

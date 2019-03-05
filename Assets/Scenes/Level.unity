@@ -124,7 +124,6 @@ GameObject:
   - component: {fileID: 395910042}
   - component: {fileID: 395910041}
   - component: {fileID: 395910044}
-  - component: {fileID: 395910045}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -209,13 +208,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   block: {fileID: 0}
---- !u!114 &395910045
+--- !u!1 &1029862486 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3293257253621145936, guid: e8fae2faa8c075042af80558958c4d05,
+    type: 3}
+  m_PrefabInstance: {fileID: 3293257255232153216}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1029862487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395910040}
+  m_GameObject: {fileID: 1029862486}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 092bb81c2f4635f479281f0d57625494, type: 3}
@@ -225,7 +230,10 @@ MonoBehaviour:
   roundGrid: []
   grid: []
   stop: 0
+<<<<<<< HEAD
   baseWall: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f0000003000000031000000
+=======
+>>>>>>> a77fd87e56cabb38422201d677d1a0ffd92fd350
 --- !u!1001 &1231437222056606078
 PrefabInstance:
   m_ObjectHideFlags: 0
