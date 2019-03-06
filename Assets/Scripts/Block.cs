@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Block : MonoBehaviour {
 
-    public GameObject gameObjectToDrag; // refer to GO that is being dragged
+    public GameObject gameObjectToDrag; 
     public Vector3 GOCentre;
-    public Vector3 touchPosition; // touch or click position
-    public Vector3 offset; // vector between touchpoint and object centre
-    public Vector3 newGOCentre; // new centre of GO after move
-    RaycastHit hit; // store hit object info
-    public bool draggingMode = false; // is draggable at that moment in time    
+    public Vector3 touchPosition; 
+    public Vector3 offset; 
+    public Vector3 newGOCentre; 
+    RaycastHit hit; 
+    public bool draggingMode = false;  
     public bool snap = false;
     public Vector3 TPos;
     public Vector3 LPos;
@@ -40,24 +40,23 @@ public class Block : MonoBehaviour {
         }
     }
 
-    void OnMouseDown() { // on initial mouse click down
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // raycast out from click spot to identify box collider the click is in
-        // if the ray hits a collider (not 2Dcollider)
-        if (Physics.Raycast(ray, out hit)) { // if raycast hits
-            gameObjectToDrag = hit.collider.gameObject; // gameobject that will be dragged equals what the raycast hit
-            GOCentre = gameObjectToDrag.transform.position; // sets original position before the move
-            touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // sets the position in which the mouse clicked, used for the offset
-            offset = touchPosition - GOCentre; // sets the offset between the click position and the centre of the object before the move
-            draggingMode = true; // object is now draggable
+    void OnMouseDown() { 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
+        if (Physics.Raycast(ray, out hit)) {
+            gameObjectToDrag = hit.collider.gameObject; 
+            GOCentre = gameObjectToDrag.transform.position; 
+            touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            offset = touchPosition - GOCentre; 
+            draggingMode = true; 
             SendToTop();
         }       
     }
 
-    void OnMouseDrag() { // as mouse is moving
-        if (draggingMode) { // if dragging mode is enabled
-            touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // sets the position in which the mouse clicked, used for the offset
-            newGOCentre = touchPosition - offset; // new centre as mouse is dragging piece
-            gameObjectToDrag.transform.position = new Vector3(newGOCentre.x, newGOCentre.y, GOCentre.z); // this is all to show how the piece is moving around as it is being dragged
+    void OnMouseDrag() { 
+        if (draggingMode) { 
+            touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+            newGOCentre = touchPosition - offset; 
+            gameObjectToDrag.transform.position = new Vector3(newGOCentre.x, newGOCentre.y, GOCentre.z); 
         }
     }
 
@@ -146,47 +145,47 @@ public class Block : MonoBehaviour {
         if (pieces > 1) {
             for (int i = 1; i < 5; i++) {
                 if (GameObject.Find(gameObjectToDrag.name + i) != null) {
-                    shape.Add(new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.y), 0));
+                    shape.Add(new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.y), 0));                    
                 }
             }
         }
-        switch (pieces) {
-            case 1:
-                if (roundWall.Contains(shape[0])) {
-                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                    snap = true;
-                } else {
-                    Reset();
-                    snap = false;
-                }
-                break;
-            case 2:
-                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1])) {
-                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                    snap = true;
-                } else {
-                    Reset();
-                    snap = false;
-                }
-                break;
-            case 3:
-                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2])) {
-                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                    snap = true;
-                } else {
-                    Reset();
-                    snap = false;
-                }
-                break;
-            case 4:
-                if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2]) && roundWall.Contains(shape[3])) {
-                    gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                    snap = true;
-                } else {
-                    Reset();
-                    snap = false;
-                }
-                break;
+        switch (pieces) {            
+                case 1:
+                    if (roundWall.Contains(shape[0])) {
+                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                        snap = true;
+                    } else {
+                        Reset();
+                        snap = false;
+                    }
+                    break;
+                case 2:
+                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1])) {
+                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                        snap = true;
+                    } else {
+                        Reset();
+                        snap = false;
+                    }
+                    break;
+                case 3:
+                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2])) {
+                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                        snap = true;
+                    } else {
+                        Reset();
+                        snap = false;
+                    }
+                    break;
+                case 4:
+                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2]) && roundWall.Contains(shape[3])) {
+                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
+                        snap = true;
+                    } else {
+                        Reset();
+                        snap = false;
+                    }
+                    break;
         }
     }
 }

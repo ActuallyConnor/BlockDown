@@ -14,12 +14,11 @@ public class Wall : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         foreach (int i in setups.GetPreset(0)) {
-            GameObject.Find("Grid (" + i + ")").SetActive(false);
+            GameObject.Find("Grid (" + i + ")").SetActive(false);            
         }
         foreach (int i in setups.GetBoard(0)) {
             GameObject.Find("Square (" + i + ")").SetActive(false);
-        }
-        //GameObject.Find("Square (" + 0 + ")").SetActive(false);
+        }        
         squares = GameObject.FindGameObjectsWithTag("Blank");
         Debug.Log(squares.Length);
     }
@@ -42,7 +41,7 @@ public class Wall : MonoBehaviour {
         }
     }
 
-    public List<Vector3> GetRoundGrid() {
+    public List<Vector3> GetRoundGrid() {        
         return roundGrid;
     }
 
