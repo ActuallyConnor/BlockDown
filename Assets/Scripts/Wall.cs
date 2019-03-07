@@ -9,7 +9,8 @@ public class Wall : MonoBehaviour {
     public List<Vector3> roundGrid = new List<Vector3>();
     public List<Vector3> grid = new List<Vector3>();
     public bool stop = false;
-    Setup setups = new Setup();
+    public Setup setups = new Setup();
+    public int count = 0;
 
     // Start is called before the first frame update
     void Start() {
@@ -38,6 +39,9 @@ public class Wall : MonoBehaviour {
         }
         for (int i = 0; i < squares.Length; i++) {
             grid.Add(squares[i].transform.position);
+        }
+        if (count == setups.GetPreset(0).Length) {
+            SceneManager.LoadScene("Win");
         }
     }
 

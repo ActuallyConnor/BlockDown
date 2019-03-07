@@ -21,6 +21,7 @@ public class Block : MonoBehaviour {
     public int pieces = 0;
     List<Vector3> roundWall;
     List<Vector3> wall;
+    public int count = 0;
 
     // Start is called before the first frame update
     void Start() {
@@ -154,38 +155,48 @@ public class Block : MonoBehaviour {
                     if (roundWall.Contains(shape[0])) {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
+                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 1;
                     } else {
-                        Reset();
-                        snap = false;
+                        PutBack();
                     }
                     break;
                 case 2:
                     if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1])) {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
+                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 2;
                     } else {
-                        Reset();
-                        snap = false;
+                        PutBack();
                     }
                     break;
                 case 3:
                     if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2])) {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
+                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 3;
                     } else {
-                        Reset();
-                        snap = false;
+                        PutBack();
                     }
                     break;
                 case 4:
                     if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2]) && roundWall.Contains(shape[3])) {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
+                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 4;
                     } else {
-                        Reset();
-                        snap = false;
+                        PutBack();
                     }
                     break;
+        }
+    }
+
+    void PutBack() {
+        Reset();
+        snap = false;
+        if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
+            GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count - pieces;
+        } else {
+            GameObject.Find("Grid").GetComponent<Wall>().count = 0;
         }
     }
 }
