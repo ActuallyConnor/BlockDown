@@ -11,13 +11,16 @@ public class Wall : MonoBehaviour {
     public bool stop = false;
     public Setup setups = new Setup();
     public int count = 0;
+    System.Random rand = new System.Random();
+    public int num;
 
     // Start is called before the first frame update
     void Start() {
-        foreach (int i in setups.GetPreset(0)) {
+        num = rand.Next(0, 658);
+        foreach (int i in setups.GetPreset(num)) {
             GameObject.Find("Grid (" + i + ")").SetActive(false);            
         }
-        foreach (int i in setups.GetBoard(0)) {
+        foreach (int i in setups.GetBoard(num)) {
             GameObject.Find("Square (" + i + ")").SetActive(false);
         }        
         squares = GameObject.FindGameObjectsWithTag("Blank");
@@ -40,7 +43,7 @@ public class Wall : MonoBehaviour {
         for (int i = 0; i < squares.Length; i++) {
             grid.Add(squares[i].transform.position);
         }
-        if (count == setups.GetPreset(0).Length) {
+        if (count == setups.GetPreset(num).Length) {
             SceneManager.LoadScene("Win");
         }
     }
