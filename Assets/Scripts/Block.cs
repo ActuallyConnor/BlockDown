@@ -32,12 +32,15 @@ public class Block : MonoBehaviour {
         LinePos = new Vector3((float)-3.5, -9, 0);
         TwoPos = new Vector3((float)0.5, -9, 0);
         DotPos = new Vector3((float)3.5, (float)-9, 0);
+
+        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+
     }
 
     // Update is called once per frame
     void Update() {
         if (snap && GameObject.Find("Grid").transform.position.y > 0) {
-            GameObject.Find(gameObjectToDrag.name).transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+            GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
         }
     }
 
@@ -156,6 +159,7 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 1;
+                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
                     } else {
                         PutBack();
                     }
@@ -165,7 +169,9 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 2;
-                    } else {
+                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+
+                } else {
                         PutBack();
                     }
                     break;
@@ -174,7 +180,8 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 3;
-                    } else {
+                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                } else {
                         PutBack();
                     }
                     break;
@@ -183,7 +190,8 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 4;
-                    } else {
+                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                } else {
                         PutBack();
                     }
                     break;
@@ -193,10 +201,14 @@ public class Block : MonoBehaviour {
     void PutBack() {
         Reset();
         snap = false;
-        if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
-            GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count - pieces;
-        } else {
-            GameObject.Find("Grid").GetComponent<Wall>().count = 0;
-        }
+        if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6) {
+            if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
+                GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count - pieces;
+                Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+            } else {
+                GameObject.Find("Grid").GetComponent<Wall>().count = 0;
+                Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+            }
+        }        
     }
 }

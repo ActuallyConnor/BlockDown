@@ -230,6 +230,8 @@ MonoBehaviour:
   roundGrid: []
   grid: []
   stop: 0
+  count: 0
+  num: 0
 --- !u!1001 &1231437222056606078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -921,6 +923,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6381226844666998685, guid: e8fae2faa8c075042af80558958c4d05,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 104
+      objectReference: {fileID: 0}
+    - target: {fileID: 4924544252871091122, guid: e8fae2faa8c075042af80558958c4d05,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 105
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143629642991334513, guid: e8fae2faa8c075042af80558958c4d05,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 106
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460571448153177679, guid: e8fae2faa8c075042af80558958c4d05,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 107
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8fae2faa8c075042af80558958c4d05, type: 3}
