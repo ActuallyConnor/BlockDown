@@ -12,7 +12,7 @@ public class Wall : MonoBehaviour {
     public Setup setups = new Setup();
     public int count = 0;
     System.Random rand = new System.Random();
-    public int num;
+    public Game game = new Game();
 
     // Start is called before the first frame update
     void Start() {
@@ -35,7 +35,10 @@ public class Wall : MonoBehaviour {
         for (int i = 0; i < squares.Length; i++) {
             grid.Add(squares[i].transform.position);
         }
-        if (count == setups.GetPreset(num).Length) {
+        if (count >= setups.GetPreset(0).Length) {
+            SceneManager.LoadScene("Level");
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow)) {
             SceneManager.LoadScene("Level");
         }
     }
@@ -48,13 +51,14 @@ public class Wall : MonoBehaviour {
         return grid;
     }
     void LoadLevel() {
-        num = rand.Next(0, 1402);
-        for (int i = 0; i < setups.GetPreset(num).Length; i++) {
-            GameObject.Find("Grid (" + setups.GetPreset(num)[i] + ")").SetActive(false);
+        for (int i = 0; i < setups.GetPreset(0).Length; i++) {
+            GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);
         }
-        for (int i = 0; i < setups.GetBoard(num).Count; i++) {
-            GameObject.Find("Square (" + setups.GetBoard(num)[i] + ")").SetActive(false);
+        for (int i = 0; i < setups.GetBoard(0).Count; i++) {
+            GameObject.Find("Square (" + (setups.GetBoard(0)[i]) + ")").SetActive(false);
         }
         squares = GameObject.FindGameObjectsWithTag("Blank");
     }
+
+    public int[] GetSetup() => setups.GetPreset(0);
 }

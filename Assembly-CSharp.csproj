@@ -56,6 +56,7 @@
      <Compile Include="Assets\Scripts\Block.cs" />
      <Compile Include="Assets\Scripts\Game.cs" />
      <Compile Include="Assets\Scripts\MenuSystem.cs" />
+     <Compile Include="Assets\Scripts\MusicClass.cs" />
      <Compile Include="Assets\Scripts\Setup.cs" />
      <Compile Include="Assets\Scripts\Wall.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Block : MonoBehaviour {
@@ -33,7 +34,7 @@ public class Block : MonoBehaviour {
         TwoPos = new Vector3((float)0.5, -9, 0);
         DotPos = new Vector3((float)3.5, (float)-9, 0);
 
-        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
 
     }
 
@@ -65,10 +66,11 @@ public class Block : MonoBehaviour {
     }
 
     void OnMouseUp() {
-        draggingMode = false;        
-        Shape();
+        draggingMode = false;
+        Pythagorean();
         Overlap();
         SendToBottom();
+        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
     }
 
     void SendToTop() {
@@ -140,7 +142,8 @@ public class Block : MonoBehaviour {
         }
     }
     
-    void Shape() {
+    bool Shape() {
+        bool good = false;
         roundWall = FindObjectOfType<Wall>().GetRoundGrid();
         wall = FindObjectOfType<Wall>().GetGrid();
         List<Vector3> shape = new List<Vector3> {
@@ -159,7 +162,8 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 1;
-                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                        good = true;
+                        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
                     } else {
                         PutBack();
                     }
@@ -169,8 +173,8 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 2;
-                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-
+                        good = true;
+                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
                 } else {
                         PutBack();
                     }
@@ -180,7 +184,8 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 3;
-                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                        good = true;
+                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
                 } else {
                         PutBack();
                     }
@@ -190,12 +195,14 @@ public class Block : MonoBehaviour {
                         gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
                         snap = true;
                         GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 4;
-                        Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                        good = true;
+                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
                 } else {
                         PutBack();
                     }
                     break;
         }
+        return good;
     }
 
     void PutBack() {
@@ -210,5 +217,48 @@ public class Block : MonoBehaviour {
                 Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
             }
         }        
+    }
+
+    bool Pythagorean() {
+        bool good = false;
+        List<Vector3> temp = GameObject.Find("Grid").GetComponent<Wall>().GetGrid();
+        List<Vector3> shape = new List<Vector3>();
+        bool fits = false;
+        for (int i = 0; i < temp.Count; i++) {
+            if (gameObjectToDrag.transform.position.x > temp[i].x - 1 && gameObjectToDrag.transform.position.x < temp[i].x + 1 && gameObjectToDrag.transform.position.y > temp[i].y - 1 && gameObjectToDrag.transform.position.y < temp[i].y + 1) {
+                gameObjectToDrag.transform.position = temp[i];                
+                if (pieces > 1) {
+                    for (int j = 1; j < 5; j++) {
+                        if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                            shape.Add(GameObject.Find(gameObjectToDrag.name + j).transform.position);
+                        }
+                    }
+                } else {
+                    fits = true;
+                    snap = true;
+                }
+                fits = true;
+                for (int j = 0; j < shape.Count; j++) {
+                    if (!temp.Contains(shape[j])) {
+                        fits = false;
+                        snap = false;
+                        PutBack();
+                        break;
+                    } else {
+                        snap = true;                        
+                    }
+                }                
+            }
+        }
+        if (fits == false || snap == false) {
+            PutBack();
+            snap = false;
+        } else if (GOCentre.y <= -6) {
+            GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + pieces;
+            //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+        } else if (fits == true && snap == true) {
+            good = true;
+        }
+        return good;
     }
 }

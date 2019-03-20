@@ -280,3 +280,5 @@ C:\Users\conno\Documents\Barriers\obj\Debug\Assembly-CSharp.csproj.CoreCompileIn
 C:\Users\conno\Documents\Barriers\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\conno\Documents\Barriers\obj\Debug\Assembly-CSharp.dll
 C:\Users\conno\Documents\Barriers\obj\Debug\Assembly-CSharp.pdb
+C:\Users\conno\Documents\Barriers\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
+C:\Users\conno\Documents\Barriers\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml
