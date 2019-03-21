@@ -28,6 +28,7 @@ public class Block : MonoBehaviour {
     public GameObject[] spots;
     public List<Vector3> check = new List<Vector3>();
     public GameObject[] onBoard;
+    bool fits;
 
     // Start is called before the first frame update
     void Start() {
@@ -35,9 +36,9 @@ public class Block : MonoBehaviour {
         LPos = new Vector3(-3, -6, 0);
         SquarePos = new Vector3(3, -6, 0);
 
-        LinePos = new Vector3((float)-3.5, -9, 0);
-        TwoPos = new Vector3((float)0.5, -9, 0);
-        DotPos = new Vector3((float)3.5, (float)-9, 0);
+        LinePos = new Vector3(-3, -9, 0);
+        TwoPos = new Vector3(1, -9, 0);
+        DotPos = new Vector3(4, (float)-9, 0);
 
         //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
         stop = GameObject.FindGameObjectsWithTag("Block");
@@ -84,6 +85,10 @@ public class Block : MonoBehaviour {
         draggingMode = false;
         Pythagorean();
         Overlap();
+        Placed();
+        if (pieces == 1 && gameObjectToDrag.transform.position.y <= -6 && GOCentre.y > -6) {
+            PutBack();
+        }
         SendToBottom();
         Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
     }
@@ -161,7 +166,8 @@ public class Block : MonoBehaviour {
     void PutBack() {
         Reset();
         snap = false;
-        if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6) {
+        fits = false;
+        if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6 || snap == false) {
             if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
                 GameObject.Find("Grid").GetComponent<Wall>().count -= pieces;
             } else {
@@ -169,6 +175,12 @@ public class Block : MonoBehaviour {
             }
         }        
     }    
+
+    void Placed() {
+        if (snap == true && GOCentre.y <= -6) {
+            GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
+        }
+    }
 
     void Pythagorean() {
         spots = GameObject.FindGameObjectsWithTag("Blank");
@@ -181,10 +193,10 @@ public class Block : MonoBehaviour {
         float b;
         float c;
         float least = 1000;
-        bool fits = false;
-        Vector3 closest = check[0];
-        Vector3 second = check[0];
-        Vector3 third = check[0];
+        fits = false;
+        Vector3 closest = TPos;
+        Vector3 second = TPos;
+        Vector3 third = TPos;
         foreach (Vector3 che in check) {
             a = gameObjectToDrag.transform.position.x - che.x;
             b = gameObjectToDrag.transform.position.y - che.y;
@@ -192,13 +204,14 @@ public class Block : MonoBehaviour {
             b = Mathf.Pow(b, 2);
             c = a + b;
             c = Mathf.Sqrt(c);
-            if (c < least) {
+            if (c < least && c < 1.5) {
                 third = second;
                 second = closest;
                 closest = che;
                 least = c;
             }
         }
+
         gameObjectToDrag.transform.position = closest;
         if (pieces > 1) {
             for (int j = 1; j < 4; j++) {
@@ -257,9 +270,6 @@ public class Block : MonoBehaviour {
                     snap = false;
                 }
             }
-        }
-        if (snap == true && GOCentre.y <= -6) {
-            GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
         }
     }
 }
