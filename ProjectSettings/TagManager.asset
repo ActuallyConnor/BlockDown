@@ -12,6 +12,7 @@ TagManager:
   - SubDot
   - Square
   - Blank
+  - Music
   layers:
   - Default
   - TransparentFX

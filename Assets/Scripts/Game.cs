@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour {   
+public class Game {   
 
-    public Block block = new Block();
-
-    // Start is called before the first frame update
-    void Start() {
-        //used = wall.GetUsedSpots();
-        
+    public int cnt = -1;
+    public int GetCnt() {
+        cnt++;
+        return cnt;
     }
-
-    // Update is called once per frame
-    void Update() {
-    }
-
 }
