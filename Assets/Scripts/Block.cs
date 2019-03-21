@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,6 +24,10 @@ public class Block : MonoBehaviour {
     List<Vector3> roundWall;
     List<Vector3> wall;
     public int count = 0;
+    public GameObject[] stop;
+    public GameObject[] spots;
+    public List<Vector3> check = new List<Vector3>();
+    public GameObject[] onBoard;
 
     // Start is called before the first frame update
     void Start() {
@@ -35,17 +40,27 @@ public class Block : MonoBehaviour {
         DotPos = new Vector3((float)3.5, (float)-9, 0);
 
         //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-
+        stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
     // Update is called once per frame
     void Update() {
-        if (snap && GameObject.Find("Grid").transform.position.y > 0) {
+        if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
             GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+        }
+        if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+            foreach (GameObject go in stop) {
+                go.transform.Translate(new Vector3(0, 0, 0));
+                StartCoroutine("WinWait");
+            }
         }
     }
 
-    void OnMouseDown() { 
+    IEnumerator WinWait() {
+        yield return new WaitForSeconds(1);
+    }
+
+        void OnMouseDown() { 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
         if (Physics.Raycast(ray, out hit)) {
             gameObjectToDrag = hit.collider.gameObject; 
@@ -112,6 +127,7 @@ public class Block : MonoBehaviour {
                 gameObjectToDrag.transform.position = SquarePos;
                 break;
         }
+        snap = false;
     }
 
     void Overlap() {
@@ -142,123 +158,108 @@ public class Block : MonoBehaviour {
         }
     }
     
-    bool Shape() {
-        bool good = false;
-        roundWall = FindObjectOfType<Wall>().GetRoundGrid();
-        wall = FindObjectOfType<Wall>().GetGrid();
-        List<Vector3> shape = new List<Vector3> {
-            new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name).transform.position.y), 0)
-        };
-        if (pieces > 1) {
-            for (int i = 1; i < 5; i++) {
-                if (GameObject.Find(gameObjectToDrag.name + i) != null) {
-                    shape.Add(new Vector3(Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.x), Mathf.Round(GameObject.Find(gameObjectToDrag.name + i).transform.position.y), 0));                    
-                }
-            }
-        }
-        switch (pieces) {            
-                case 1:
-                    if (roundWall.Contains(shape[0])) {
-                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                        snap = true;
-                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 1;
-                        good = true;
-                        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-                    } else {
-                        PutBack();
-                    }
-                    break;
-                case 2:
-                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1])) {
-                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                        snap = true;
-                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 2;
-                        good = true;
-                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-                } else {
-                        PutBack();
-                    }
-                    break;
-                case 3:
-                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2])) {
-                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                        snap = true;
-                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 3;
-                        good = true;
-                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-                } else {
-                        PutBack();
-                    }
-                    break;
-                case 4:
-                    if (roundWall.Contains(shape[0]) && roundWall.Contains(shape[1]) && roundWall.Contains(shape[2]) && roundWall.Contains(shape[3])) {
-                        gameObjectToDrag.transform.position = wall[roundWall.IndexOf(shape[0])];
-                        snap = true;
-                        GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + 4;
-                        good = true;
-                    //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-                } else {
-                        PutBack();
-                    }
-                    break;
-        }
-        return good;
-    }
-
     void PutBack() {
         Reset();
         snap = false;
         if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6) {
             if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
-                GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count - pieces;
-                Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+                GameObject.Find("Grid").GetComponent<Wall>().count -= pieces;
             } else {
                 GameObject.Find("Grid").GetComponent<Wall>().count = 0;
-                Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
             }
         }        
-    }
+    }    
 
-    bool Pythagorean() {
-        bool good = false;
-        List<Vector3> temp = GameObject.Find("Grid").GetComponent<Wall>().GetGrid();
-        List<Vector3> shape = new List<Vector3>();
+    void Pythagorean() {
+        spots = GameObject.FindGameObjectsWithTag("Blank");
+        onBoard = GameObject.FindGameObjectsWithTag("Block");
+        check.Clear();
+        foreach (GameObject spot in spots) {
+            check.Add(spot.transform.position);
+        }
+        float a;
+        float b;
+        float c;
+        float least = 1000;
         bool fits = false;
-        for (int i = 0; i < temp.Count; i++) {
-            if (gameObjectToDrag.transform.position.x > temp[i].x - 1 && gameObjectToDrag.transform.position.x < temp[i].x + 1 && gameObjectToDrag.transform.position.y > temp[i].y - 1 && gameObjectToDrag.transform.position.y < temp[i].y + 1) {
-                gameObjectToDrag.transform.position = temp[i];                
-                if (pieces > 1) {
-                    for (int j = 1; j < 5; j++) {
-                        if (GameObject.Find(gameObjectToDrag.name + j) != null) {
-                            shape.Add(GameObject.Find(gameObjectToDrag.name + j).transform.position);
-                        }
-                    }
-                } else {
-                    fits = true;
-                    snap = true;
-                }
-                fits = true;
-                for (int j = 0; j < shape.Count; j++) {
-                    if (!temp.Contains(shape[j])) {
-                        fits = false;
-                        snap = false;
-                        PutBack();
-                        break;
-                    } else {
-                        snap = true;                        
-                    }
-                }                
+        Vector3 closest = check[0];
+        Vector3 second = check[0];
+        Vector3 third = check[0];
+        foreach (Vector3 che in check) {
+            a = gameObjectToDrag.transform.position.x - che.x;
+            b = gameObjectToDrag.transform.position.y - che.y;
+            a = Mathf.Pow(a, 2);
+            b = Mathf.Pow(b, 2);
+            c = a + b;
+            c = Mathf.Sqrt(c);
+            if (c < least) {
+                third = second;
+                second = closest;
+                closest = che;
+                least = c;
             }
         }
-        if (fits == false || snap == false) {
-            PutBack();
-            snap = false;
-        } else if (GOCentre.y <= -6) {
-            GameObject.Find("Grid").GetComponent<Wall>().count = GameObject.Find("Grid").GetComponent<Wall>().count + pieces;
-            //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
-        } else if (fits == true && snap == true) {
-            good = true;
+        gameObjectToDrag.transform.position = closest;
+        if (pieces > 1) {
+            for (int j = 1; j < 4; j++) {
+                if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                    if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                        fits = true;
+                    } else {
+                        fits = false;
+                        snap = false;
+                        break;
+                    }
+                }
+            }
+        } else if (pieces == 1) {
+            fits = true;
         }
-        return good;
+        if (fits == true) {
+            snap = true;  
+        } else {
+            gameObjectToDrag.transform.position = second; // first spot failed
+            if (pieces > 1) {
+                for (int j = 1; j < 4; j++) {
+                    if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                        if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                            fits = true;
+                        } else {
+                            fits = false;
+                            snap = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (fits == true) {
+                snap = true;
+            } else {
+                gameObjectToDrag.transform.position = third; // second spot failed
+                if (pieces > 1) {
+                    for (int j = 1; j < 4; j++) {
+                        if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                            if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                                fits = true;
+                            } else {
+                                fits = false;
+                                snap = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (fits == true) {
+                    snap = true;
+                } else {
+                    PutBack(); // third spot failed
+                    fits = false;
+                    snap = false;
+                }
+            }
+        }
+        if (snap == true && GOCentre.y <= -6) {
+            GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
+        }
     }
 }

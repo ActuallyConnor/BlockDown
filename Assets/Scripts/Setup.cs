@@ -22,13 +22,13 @@ public class Setup {
     public int[] created;
 
     public Setup() {
-        if (passed > 36) {
+        if (GetPassed() > 19) {
             created = Create(6);
-        } else if (passed > 18) {
+        } else if (GetPassed() > 13) {
             created = Create(5);
-        } else if (passed > 9) {
+        } else if (GetPassed() > 7) {
             created = Create(4);
-        } else if (passed > 3) {
+        } else if (GetPassed() > 2) {
             created = Create(3);
         } else {
             created = Create(2);
@@ -49,27 +49,28 @@ public class Setup {
     int[] Create(int p) {
         string[] toUse = RandGen();
         int[] changes = new int[] {
-                1, -1, 10, -10
-            };
+            1, -1, 10, -10
+        };
+
         List<int> onBoard = new List<int>();
         switch (toUse[0]) {
             case "T":
-                onBoard.AddRange(TShape(21));
+                onBoard.AddRange(TShape(23));
                 break;
             case "L":
-                onBoard.AddRange(LShape(21));
+                onBoard.AddRange(LShape(23));
                 break;
             case "Square":
-                onBoard.AddRange(Square(21));
+                onBoard.AddRange(Square(23));
                 break;
             case "Line":
-                onBoard.AddRange(Line(21));
+                onBoard.AddRange(Line(23));
                 break;
             case "Two":
-                onBoard.AddRange(Two(21));
+                onBoard.AddRange(Two(23));
                 break;
             case "Dot":
-                onBoard.AddRange(Dot(21));
+                onBoard.AddRange(Dot(23));
                 break;
         }
         Console.WriteLine(toUse[0]);
@@ -298,4 +299,7 @@ public class Setup {
         Console.WriteLine("Rand Generated");
         return used;
     }
+
+    public int GetPassed() => passed/3;
+    public void SetPassed(int n) => passed = n;
 }
