@@ -7,4 +7,7 @@ public class MenuSystem : MonoBehaviour {
     public void PlayAgain() {
         SceneManager.LoadScene("Level");
     }
+    public void FreePlay() {
+        SceneManager.LoadScene("FreePlay");
+    }
 }
