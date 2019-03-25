@@ -17,7 +17,7 @@ public class Setup {
         50, 51, 52, 53, 54, 55, 56, 57, 58, 59
     };
     List<int[]> presets = new List<int[]>();
-    public static int passed = -1;
+    public static int passed = 0;
     public int num = 2;
     public int[] created;
 
@@ -34,7 +34,6 @@ public class Setup {
             created = Create(2);
         }        
         presets.Add(created);
-        passed++;
     }
 
     public int[] GetPreset(int index) => presets[index];
@@ -54,7 +53,7 @@ public class Setup {
 
         List<int> onBoard = new List<int>();
         switch (toUse[0]) {
-            case "T":
+            case "T":                
                 onBoard.AddRange(TShape(23));
                 break;
             case "L":
@@ -86,7 +85,7 @@ public class Setup {
             onBoard = Place(onBoard, toUse[4]);
         }
         if (p > 5) {
-            onBoard = Place(onBoard, toUse[2]);
+            onBoard = Place(onBoard, toUse[5]);
         }
         return onBoard.ToArray();
     }
@@ -300,6 +299,6 @@ public class Setup {
         return used;
     }
 
-    public int GetPassed() => passed/3;
+    public int GetPassed() => passed%16;
     public void SetPassed(int n) => passed = n;
 }

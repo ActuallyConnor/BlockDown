@@ -190,6 +190,10 @@ MonoBehaviour:
   SquarePos: {x: 0, y: 0, z: 0}
   pieces: 4
   count: 0
+  stop: []
+  spots: []
+  check: []
+  onBoard: []
 --- !u!65 &8129789422911945990
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -201,7 +205,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 0.2}
+  m_Size: {x: 2.5, y: 2.5, z: 0.2}
   m_Center: {x: 0.5, y: -0.5, z: 0}
 --- !u!1 &5637850977095375534
 GameObject:

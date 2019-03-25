@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 public class FreeWall : MonoBehaviour {
 
     public GameObject[] squares;
-    public List<Vector3> roundGrid = new List<Vector3>();
-    public List<Vector3> grid = new List<Vector3>();
     public bool stop = false;
     public Setup setups = new Setup();
     public int count = 0;
@@ -35,17 +33,8 @@ public class FreeWall : MonoBehaviour {
             GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             setups.SetPassed(0);
             SceneManager.LoadScene("GameOver");
-        }
-        grid.Clear();
-        roundGrid.Clear();
-        for (int i = 0; i < squares.Length; i++) {
-            roundGrid.Add(new Vector3(Mathf.Round(squares[i].transform.position.x), Mathf.Round(squares[i].transform.position.y), 0));
         }*/
-        for (int i = 0; i < squares.Length; i++) {
-            grid.Add(squares[i].transform.position);
-        }
         if (count >= setups.GetPreset(0).Length) {
-            //StartCoroutine("WinWait");
             SceneManager.LoadScene("FreePlay");
         }
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
@@ -58,13 +47,6 @@ public class FreeWall : MonoBehaviour {
         SceneManager.LoadScene("FreePlay");
     }
 
-    public List<Vector3> GetRoundGrid() {
-        return roundGrid;
-    }
-
-    public List<Vector3> GetGrid() {
-        return grid;
-    }
     void LoadLevel() {
         for (int i = 0; i < setups.GetPreset(0).Length; i++) {
             GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);

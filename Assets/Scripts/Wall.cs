@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 public class Wall : MonoBehaviour {
 
     public GameObject[] squares;
-    public List<Vector3> roundGrid = new List<Vector3>();
-    public List<Vector3> grid = new List<Vector3>();
     public bool stop = false;
     public Setup setups = new Setup();
     public int count = 0;
@@ -26,8 +24,26 @@ public class Wall : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (GameObject.Find("Grid").transform.position.y > 0 && count < setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+        if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
+            if (setups.GetPassed() > 59) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 49) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 39) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 29) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 19) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.6, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 13) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 7) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 2) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+            } else {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+            }            
         } else if (count >= setups.GetPreset(0).Length) {
             GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             StartCoroutine("WinWait");
@@ -35,14 +51,6 @@ public class Wall : MonoBehaviour {
             GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             setups.SetPassed(0);
             SceneManager.LoadScene("GameOver");
-        }
-        grid.Clear();
-        roundGrid.Clear();
-        for (int i = 0; i < squares.Length; i++) {
-            roundGrid.Add(new Vector3(Mathf.Round(squares[i].transform.position.x), Mathf.Round(squares[i].transform.position.y), 0));
-        }
-        for (int i = 0; i < squares.Length; i++) {
-            grid.Add(squares[i].transform.position);
         }
         if (count >= setups.GetPreset(0).Length) {
             StartCoroutine("WinWait");            
@@ -57,13 +65,6 @@ public class Wall : MonoBehaviour {
         SceneManager.LoadScene("Level");
     }
 
-    public List<Vector3> GetRoundGrid() {        
-        return roundGrid;
-    }
-
-    public List<Vector3> GetGrid() {
-        return grid;
-    }
     void LoadLevel() {
         for (int i = 0; i < setups.GetPreset(0).Length; i++) {
             GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);

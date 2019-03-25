@@ -46,19 +46,15 @@ public class FreeBlock : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        /*if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+        if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<FreeWall>().count < GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
             GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
         }
-        if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
-            foreach (GameObject go in stop) {
-                go.transform.Translate(new Vector3(0, 0, 0));
-                StartCoroutine("WinWait");
-            }
-        }*/
     }
 
     IEnumerator WinWait() {
+        GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + 1);
         yield return new WaitForSeconds(1);
+
     }
 
     void OnMouseDown() {
@@ -91,6 +87,55 @@ public class FreeBlock : MonoBehaviour {
         }
         SendToBottom();
         Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
+        if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
+            foreach (GameObject go in stop) {
+                go.transform.Translate(new Vector3(0, 0, 0));
+                StartCoroutine("WinWait");
+            }
+        }
+        if (gameObjectToDrag.transform.position.y > -6) {
+            switch (gameObjectToDrag.name) {
+                case "T":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 2, 0);
+                    break;
+                case "L":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
+                    break;
+                case "Square":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
+                    break;
+                case "Line":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 1, 0);
+                    break;
+                case "Two":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 1, 0);
+                    break;
+                case "Dot":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0);
+                    break;
+            }
+        } else {
+            switch (gameObjectToDrag.name) {
+                case "T":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)2.5, 0);
+                    break;
+                case "L":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
+                    break;
+                case "Square":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
+                    break;
+                case "Line":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)1.5, 0);
+                    break;
+                case "Two":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)1.5, 0);
+                    break;
+                case "Dot":
+                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)1.5, (float)1.5, 0);
+                    break;
+            }
+        }
     }
 
     void SendToTop() {
@@ -167,7 +212,7 @@ public class FreeBlock : MonoBehaviour {
         Reset();
         snap = false;
         fits = false;
-        if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6 || snap == false) {
+        if (GOCentre.y > -6 && gameObjectToDrag.transform.position.y <= -6 && !(GOCentre.y <= -6 && gameObjectToDrag.transform.position.y <= -6)) {
             if (GameObject.Find("Grid").GetComponent<FreeWall>().count - pieces >= 0) {
                 GameObject.Find("Grid").GetComponent<FreeWall>().count -= pieces;
             } else {
@@ -273,4 +318,3 @@ public class FreeBlock : MonoBehaviour {
         }
     }
 }
-
