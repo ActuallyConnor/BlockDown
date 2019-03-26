@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 225bf0f761cb3c14c80b8996fa675b89
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Karnivore
+  fontNames:
+  - Karnivore
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c7e97d0a2e3fd3f40bce721ec4644d23, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

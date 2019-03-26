@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Block.cs" />
      <Compile Include="Assets\Scripts\BottomMenu.cs" />
+     <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\FreeBlock.cs" />
      <Compile Include="Assets\Scripts\FreeWall.cs" />
      <Compile Include="Assets\Scripts\Game.cs" />

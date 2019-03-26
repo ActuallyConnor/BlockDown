@@ -48,23 +48,23 @@ public class Block : MonoBehaviour {
     void Update() {
         if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
             if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 59) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 49) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 39) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 29) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 19) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.6, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 13) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 7) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
             } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 2) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
             } else {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
             }
         }        
     }

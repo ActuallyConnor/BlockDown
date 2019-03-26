@@ -26,23 +26,23 @@ public class Wall : MonoBehaviour {
     void Update() {
         if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
             if (setups.GetPassed() > 59) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 49) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 39) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 29) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 19) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.6, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 13) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 7) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.8, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 2) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.9, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
             } else {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime, Space.World);
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
             }            
         } else if (count >= setups.GetPreset(0).Length) {
             GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
