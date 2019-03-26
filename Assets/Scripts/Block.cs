@@ -69,8 +69,7 @@ public class Block : MonoBehaviour {
         }        
     }
 
-    IEnumerator WinWait() {
-        GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
+    IEnumerator WinWait() {        
         yield return new WaitForSeconds(1);
 
     }
@@ -106,6 +105,7 @@ public class Block : MonoBehaviour {
         SendToBottom();
         //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
         if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             foreach (GameObject go in stop) {
                 go.transform.Translate(new Vector3(0, 0, 0));
                 StartCoroutine("WinWait");

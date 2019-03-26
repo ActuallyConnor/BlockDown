@@ -299,6 +299,8 @@ public class Setup {
         return used;
     }
 
-    public int GetPassed() => passed%16;
+    public int GetPassed() {
+        return passed;
+    }
     public void SetPassed(int n) => passed = n;
 }
