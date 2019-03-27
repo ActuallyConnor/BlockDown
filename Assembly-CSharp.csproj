@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\FreeBlock.cs" />
      <Compile Include="Assets\Scripts\FreeWall.cs" />
      <Compile Include="Assets\Scripts\Game.cs" />
+     <Compile Include="Assets\Scripts\JengaScript.cs" />
      <Compile Include="Assets\Scripts\MenuSystem.cs" />
      <Compile Include="Assets\Scripts\MusicClass.cs" />
      <Compile Include="Assets\Scripts\PlayClick.cs" />

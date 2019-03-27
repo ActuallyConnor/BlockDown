@@ -246,8 +246,10 @@ public class Block : MonoBehaviour {
     void Placed() {
         if (snap == true && GOCentre.y <= -6) {
             GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
+            GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
+        } else {
+            GameObject.Find("woosh").GetComponent<PlayClick>().PlayAudio();
         }
-        GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
     }
 
     void Pythagorean() {
