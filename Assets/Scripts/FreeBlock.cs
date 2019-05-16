@@ -36,23 +36,40 @@ public class FreeBlock : MonoBehaviour {
         LPos = new Vector3(-3, -6, 0);
         SquarePos = new Vector3(3, -6, 0);
 
-        LinePos = new Vector3(-3, -9, 0);
-        TwoPos = new Vector3(1, -9, 0);
-        DotPos = new Vector3(4, (float)-9, 0);
+        LinePos = new Vector3(-3, (float)-8.5, 0);
+        TwoPos = new Vector3(1, (float)-8.5, 0);
+        DotPos = new Vector3(4, (float)-8.5, 0);
 
-        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
     // Update is called once per frame
     void Update() {
-        if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<FreeWall>().count < GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
-            GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
-        }
+        //if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<FreeWall>().count < GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
+        //    if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 59) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 49) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 39) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 29) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 19) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 13) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 7) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 2) {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+        //    } else {
+        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
+        //    }
+        //}
     }
 
     IEnumerator WinWait() {
-        GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + 1);
         yield return new WaitForSeconds(1);
 
     }
@@ -86,13 +103,18 @@ public class FreeBlock : MonoBehaviour {
             PutBack();
         }
         SendToBottom();
-        Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
+        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
+            GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + 1);
             foreach (GameObject go in stop) {
                 go.transform.Translate(new Vector3(0, 0, 0));
                 StartCoroutine("WinWait");
             }
         }
+        Resize();
+    }
+
+    void Resize() {
         if (gameObjectToDrag.transform.position.y > -6) {
             switch (gameObjectToDrag.name) {
                 case "T":
@@ -224,6 +246,9 @@ public class FreeBlock : MonoBehaviour {
     void Placed() {
         if (snap == true && GOCentre.y <= -6) {
             GameObject.Find("Grid").GetComponent<FreeWall>().count += pieces;
+            GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
+        } else {
+            GameObject.Find("woosh").GetComponent<PlayClick>().PlayAudio();
         }
     }
 

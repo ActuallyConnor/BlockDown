@@ -19,7 +19,7 @@ public class MenuSystem : MonoBehaviour {
                 SceneManager.LoadScene("Level");
             }
             if (hit.collider.gameObject.name == "button (1)") {
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("FreePlay");
             }
             if (hit.collider.gameObject.name == "button (2)") {
                 SceneManager.LoadScene("MainMenu");

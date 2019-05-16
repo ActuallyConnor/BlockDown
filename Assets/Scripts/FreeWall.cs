@@ -24,18 +24,36 @@ public class FreeWall : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        /*if (GameObject.Find("Grid").transform.position.y > 0 && count < setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-0.7, 0) * Time.deltaTime, Space.World);
+        if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
+            //if (setups.GetPassed() > 59) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 49) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 39) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 29) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 19) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 13) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 7) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+            //} else if (setups.GetPassed() > 2) {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+            //} else {
+            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
+            //}
         } else if (count >= setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
+            // GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             StartCoroutine("WinWait");
         } else {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
+            // GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             setups.SetPassed(0);
             SceneManager.LoadScene("GameOver");
-        }*/
+        }
         if (count >= setups.GetPreset(0).Length) {
-            SceneManager.LoadScene("FreePlay");
+            StartCoroutine("WinWait");
         }
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             SceneManager.LoadScene("FreePlay");
@@ -43,7 +61,7 @@ public class FreeWall : MonoBehaviour {
     }
 
     IEnumerator WinWait() {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds((float)0.25);
         SceneManager.LoadScene("FreePlay");
     }
 
