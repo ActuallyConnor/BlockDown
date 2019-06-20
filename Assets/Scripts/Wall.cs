@@ -26,13 +26,13 @@ public class Wall : MonoBehaviour {
     void Update() {
         if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
             if (setups.GetPassed() > 59) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 49) {
                 GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 39) {
+            } else if (setups.GetPassed() > 49) {
                 GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 29) {
+            } else if (setups.GetPassed() > 39) {
                 GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+            } else if (setups.GetPassed() > 29) {
+                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 19) {
                 GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
             } else if (setups.GetPassed() > 13) {

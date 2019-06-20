@@ -7,7 +7,7 @@ public class FreeWall : MonoBehaviour {
 
     public GameObject[] squares;
     public bool stop = false;
-    public Setup setups = new Setup();
+    public FreeSetup setups = new FreeSetup();
     public int count = 0;
     System.Random rand = new System.Random();
     public Game game = new Game();

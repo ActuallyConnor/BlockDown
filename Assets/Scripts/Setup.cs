@@ -127,7 +127,7 @@ public class Setup {
                     break;
             }
             foreach (int t in temp) {
-                if (t > 59 || t < 0) {
+                if (t > 58 || t < 0 || t == 9 || t == 19 || t == 29 || t == 39 || t == 49) {
                     again = true;
                 }
             }
@@ -160,7 +160,7 @@ public class Setup {
                         break;
                 }
                 foreach (int t in temp) {
-                    if (t > 59 || t < 0) {
+                    if (t > 58 || t < 0 || t == 9 || t == 19 || t == 29 || t == 39 || t == 49) {
                         again = true;
                     }
                 }
@@ -193,7 +193,7 @@ public class Setup {
                             break;
                     }
                     foreach (int t in temp) {
-                        if (t > 59 || t < 0) {
+                        if (t > 58 || t < 0 || t == 9 || t == 19 || t == 29 || t == 39 || t == 49) {
                             again = true;
                         }
                     }
@@ -226,7 +226,7 @@ public class Setup {
                                 break;
                         }
                         foreach (int t in temp) {
-                            if (t > 59 || t < 0) {
+                            if (t > 58 || t < 0 || t==9 || t==19 || t==29 || t==39 || t== 49) {
                                 again = true;
                             }
                         }
