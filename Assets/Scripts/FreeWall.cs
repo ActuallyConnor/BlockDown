@@ -6,12 +6,11 @@ using UnityEngine.SceneManagement;
 public class FreeWall : MonoBehaviour {
 
     public GameObject[] squares;
-    public bool stop = false;
+    public bool stop;
     public FreeSetup setups = new FreeSetup();
-    public int count = 0;
-    System.Random rand = new System.Random();
+    public int count;
     public Game game = new Game();
-    public static int passed = 0;
+    public static int passed;
 
     public int GetPassed() {
         return passed / 2;
@@ -24,31 +23,9 @@ public class FreeWall : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
-            //if (setups.GetPassed() > 59) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 49) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 39) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 29) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 19) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 13) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 7) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            //} else if (setups.GetPassed() > 2) {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            //} else {
-            //    GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
-            //}
-        } else if (count >= setups.GetPreset(0).Length) {
-            // GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
+        if (count >= setups.GetPreset(0).Length) {
             StartCoroutine("WinWait");
         } else {
-            // GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             setups.SetPassed(0);
             SceneManager.LoadScene("GameOver");
         }

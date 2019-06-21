@@ -203,27 +203,27 @@ public class Block : MonoBehaviour {
     }
 
     void Overlap() {
-        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot", "Square" };
+        string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
-        List<Vector3> onBoard = new List<Vector3>();
-        foreach (string shape in shapes) {
+        for (int i1 = 0; i1 < shapes.Length; i1++) {
+            string shape = shapes[i1];
             if (Equals(shape, gameObjectToDrag.name)) {
                 piece.Add(GameObject.Find(shape).transform.position);
                 for (int i = 1; i < pieces; i++) {
                     piece.Add(GameObject.Find(shape + i).transform.position);
                 }
             } else {
-                onBoard.Add(GameObject.Find(shape).transform.position);
+                new List<Vector3>().Add(GameObject.Find(shape).transform.position);
                 for (int i = 1; i < 5; i++) {
                     if (GameObject.Find(shape + i) != null) {
-                        onBoard.Add(GameObject.Find(shape + i).transform.position);
+                        new List<Vector3>().Add(GameObject.Find(shape + i).transform.position);
                     }
                 }
             }
         }        
         for (int i = 0; i < piece.Count; i++) {
-            for (int j = 0; j < onBoard.Count; j++) {
-                if (piece[i] == onBoard[j]) {
+            for (int j = 0; j < new List<Vector3>().Count; j++) {
+                if (piece[i] == new List<Vector3>()[j]) {
                     Reset();
                 }
             }

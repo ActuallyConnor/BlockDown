@@ -47,9 +47,6 @@ public class Setup {
 
     int[] Create(int p) {
         string[] toUse = RandGen();
-        int[] changes = new int[] {
-            1, -1, 10, -10
-        };
 
         List<int> onBoard = new List<int>();
         switch (toUse[0]) {

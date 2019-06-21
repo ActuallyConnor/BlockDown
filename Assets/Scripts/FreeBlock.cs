@@ -40,33 +40,12 @@ public class FreeBlock : MonoBehaviour {
         TwoPos = new Vector3(1, (float)-8.5, 0);
         DotPos = new Vector3(4, (float)-8.5, 0);
 
-        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
     // Update is called once per frame
     void Update() {
-        //if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<FreeWall>().count < GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
-        //    if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 59) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 49) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 39) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 29) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 19) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 13) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 7) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 2) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-        //    } else {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
-        //    }
-        //}
+
     }
 
     IEnumerator WinWait() {
@@ -103,7 +82,6 @@ public class FreeBlock : MonoBehaviour {
             PutBack();
         }
         SendToBottom();
-        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
             GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + 1);
             foreach (GameObject go in stop) {
@@ -203,9 +181,8 @@ public class FreeBlock : MonoBehaviour {
     }
 
     void Overlap() {
-        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot", "Square" };
+        string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
-        List<Vector3> onBoard = new List<Vector3>();
         foreach (string shape in shapes) {
             if (Equals(shape, gameObjectToDrag.name)) {
                 piece.Add(GameObject.Find(shape).transform.position);
@@ -213,17 +190,17 @@ public class FreeBlock : MonoBehaviour {
                     piece.Add(GameObject.Find(shape + i).transform.position);
                 }
             } else {
-                onBoard.Add(GameObject.Find(shape).transform.position);
+                new List<Vector3>().Add(GameObject.Find(shape).transform.position);
                 for (int i = 1; i < 5; i++) {
                     if (GameObject.Find(shape + i) != null) {
-                        onBoard.Add(GameObject.Find(shape + i).transform.position);
+                        new List<Vector3>().Add(GameObject.Find(shape + i).transform.position);
                     }
                 }
             }
         }
         for (int i = 0; i < piece.Count; i++) {
-            for (int j = 0; j < onBoard.Count; j++) {
-                if (piece[i] == onBoard[j]) {
+            for (int j = 0; j < new List<Vector3>().Count; j++) {
+                if (piece[i] == new List<Vector3>()[j]) {
                     Reset();
                 }
             }

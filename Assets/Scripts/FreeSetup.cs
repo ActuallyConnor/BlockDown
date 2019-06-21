@@ -22,18 +22,6 @@ public class FreeSetup {
     public int[] created;
 
     public FreeSetup() {
-        /*
-        if (GetPassed() > 19) {
-            created = Create(6);
-        } else if (GetPassed() > 13) {
-            created = Create(5);
-        } else if (GetPassed() > 7) {
-            created = Create(4);
-        } else if (GetPassed() > 2) {
-            created = Create(3);
-        } else {
-            created = Create(2);
-        }        */
         created = Create(6);
         presets.Add(created);
     }
@@ -49,9 +37,6 @@ public class FreeSetup {
 
     int[] Create(int p) {
         string[] toUse = RandGen();
-        int[] changes = new int[] {
-            1, -1, 10, -10
-        };
 
         List<int> onBoard = new List<int>();
         switch (toUse[0]) {
