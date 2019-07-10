@@ -1,125 +1,119 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using System.Linq;
+using UnityEngine;
 
 public class BlockReplacement : MonoBehaviour {
 
     public GameObject gameObjectToDrag;
-
     public Vector3 gameObjectCenter;
     public Vector3 touchPosition;
-    public Vector3 touchPositionOffsetFromCenter;
+    public Vector3 offset;
     public Vector3 newGameObjectCenter;
-
-    RaycastHit hitDetector;
-
+    RaycastHit hitCollider;
     public bool isDraggable = false;
-    public bool isSnappedIntoPlace = false;
-
-    public Vector3 TPosition;
-    public Vector3 LPosition;
-    public Vector3 linePosition;
-    public Vector3 twoPosition;
-    public Vector3 dotPosition;
-    public Vector3 squarePosition;
-
-    public float sideA;
-    public float sideB;
-    public float sideC;
-    public float least = 1000;
-    public Vector3 closest;
-    public Vector3 second;
-    public Vector3 third;
-
-    public int numberPiecesOnBoard = 0;
-
-    public List<Vector3> approximatedWall;
-    public List<Vector3> wall;
-
+    public bool snapsInPlace = false;
+    public Vector3 TPos;
+    public Vector3 LPos;
+    public Vector3 LinePos;
+    public Vector3 TwoPos;
+    public Vector3 DotPos;
+    public Vector3 SquarePos;
+    public int pieces = 0;
+    List<Vector3> wallRoundedToNearestInt;
+    List<Vector3> wall;
     public int count = 0;
-
     public GameObject[] stopDeterminer;
+    public GameObject[] blankSquares;
+    public List<Vector3> overlapCheck = new List<Vector3>();
+    public GameObject[] onBoard;
+    bool fits;
 
-    public GameObject[] blankSquare;
-
-    public List<Vector3> checkOverlaps = new List<Vector3>();
-
-    public GameObject[] piecesOnBoard;
-
-    public bool fitsInSpace;
-
-    public double EPSILON = 4.94065645841247E-324;
-
-    // Use this for initialization
+    // Start is called before the first frame update
     void Start() {
-        PositionPiecesOnBoard();
+        PlacePiecesOnBoard();
     }
 
     // Update is called once per frame
     void Update() {
-
+        if (snapsInPlace && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+            if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 59) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 49) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 39) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 29) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 19) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 13) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 7) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
+            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 2) {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
+            } else {
+                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
+            }
+        }
     }
 
-    /*
-     * To set all the initialplacements of the pieces
-     */
-    void PositionPiecesOnBoard() {
-        TPosition = new Vector3((float)-0.5, -6, 0);
-        LPosition = new Vector3(-3, -6, 0);
-        squarePosition = new Vector3(3, -6, 0);
-        linePosition = new Vector3(-3, (float)-8.5, 0);
-        twoPosition = new Vector3(1, (float)-8.5, 0);
-        dotPosition = new Vector3(4, (float)-8.5, 0);
+    void PlacePiecesOnBoard() {
+        TPos = new Vector3((float)-0.5, -6, 0);
+        LPos = new Vector3(-3, -6, 0);
+        SquarePos = new Vector3(3, -6, 0);
+        LinePos = new Vector3(-3, (float)-8.5, 0);
+        TwoPos = new Vector3(1, (float)-8.5, 0);
+        DotPos = new Vector3(4, (float)-8.5, 0);
 
         stopDeterminer = GameObject.FindGameObjectsWithTag("Block");
     }
 
-    /*
-     * To perform action when touch event begins
-     */
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(1);
+
+    }
+
     void OnMouseDown() {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hitDetector)) {
-            gameObjectToDrag = hitDetector.collider.gameObject;
+        if (Physics.Raycast(ray, out hitCollider)) {
+            gameObjectToDrag = hitCollider.collider.gameObject;
             gameObjectCenter = gameObjectToDrag.transform.position;
             touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            touchPositionOffsetFromCenter = touchPosition - gameObjectCenter;
+            offset = touchPosition - gameObjectCenter;
             isDraggable = true;
-            SendToTopLayer();
+            SendToTop();
         }
     }
 
-
-    /*
-     * To perform action when user is dragging piece
-     */
-    private void OnMouseDrag() {
+    void OnMouseDrag() {
         if (isDraggable) {
             touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            newGameObjectCenter = touchPosition - touchPositionOffsetFromCenter;
-            gameObjectToDrag.transform.position = new Vector3(newGameObjectCenter.x, newGameObjectCenter.y, newGameObjectCenter.z);
+            newGameObjectCenter = touchPosition - offset;
+            gameObjectToDrag.transform.position = new Vector3(newGameObjectCenter.x, newGameObjectCenter.y, gameObjectCenter.z);
         }
     }
 
-    private void OnMouseUp() {
+    void OnMouseUp() {
         isDraggable = false;
         Pythagorean();
-        DoesItOverlap();
+        Overlap();
         Placed();
         SinglePiecePutBack();
-        SendToBottomLayer();
-        PlacedPieceWinsLevel();
-        ResizeGameObjectOnDrop();
+        SendToBottom();
+        DoesPlacingPieceWin();
+        Resize();
     }
 
     void SinglePiecePutBack() {
-        if (numberPiecesOnBoard == 1 && gameObjectToDrag.transform.position.y <= -6 && gameObjectCenter.y > -6) {
-            PutBackToPreviousPosition();
+        if (pieces == 1 && gameObjectToDrag.transform.position.y <= -6 && gameObjectCenter.y > -6) {
+            PutBack();
         }
     }
 
-    void PlacedPieceWinsLevel() {
+    void DoesPlacingPieceWin() {
         if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
             GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             foreach (GameObject go in stopDeterminer) {
@@ -129,9 +123,12 @@ public class BlockReplacement : MonoBehaviour {
         }
     }
 
-    void ResizeGameObjectOnDrop() {
-        if (gameObjectToDrag.transform.position.y > -6) { 
-            if (Math.Abs(gameObjectToDrag.GetComponent<BoxCollider>().size.x % 1 - 0.5) < EPSILON) { // due to comparing floating point numbers
+
+    public const double EPSILON = 4.94065645841247E-324;
+
+    void Resize() {
+        if (gameObjectToDrag.transform.position.y > -6) {
+            if (Math.Abs(gameObjectToDrag.GetComponent<BoxCollider>().size.x % 1 - 0.5) < EPSILON) {
                 gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(gameObjectToDrag.GetComponent<BoxCollider>().size.x - 0.5f, gameObjectToDrag.GetComponent<BoxCollider>().size.y - 0.5f, 0);
             }
         } else {
@@ -141,101 +138,186 @@ public class BlockReplacement : MonoBehaviour {
         }
     }
 
-    void SendToTopLayer() {
+    void SendToTop() {
         GameObject.Find(gameObjectToDrag.name).GetComponent<Renderer>().sortingLayerName = "Top";
-        if (numberPiecesOnBoard > 1) {
-            for (int i = 1; i < numberPiecesOnBoard; i++) {
+        if (pieces > 1) {
+            for (int i = 1; i < pieces; i++) {
                 GameObject.Find(gameObjectToDrag.name + i).GetComponent<Renderer>().sortingLayerName = "Top";
             }
         }
     }
 
-    void SendToBottomLayer() {
+    void SendToBottom() {
         GameObject.Find(gameObjectToDrag.name).GetComponent<Renderer>().sortingLayerName = "Blocks";
-        if (numberPiecesOnBoard > 1) {
-            for (int i = 1; i < numberPiecesOnBoard; i++) {
+        if (pieces > 1) {
+            for (int i = 1; i < pieces; i++) {
                 GameObject.Find(gameObjectToDrag.name + i).GetComponent<Renderer>().sortingLayerName = "Blocks";
             }
         }
     }
 
-    void ResetToOriginalPositions() {
+    void Reset() {
         switch (gameObjectToDrag.name) {
             case "T":
-                gameObjectToDrag.transform.position = TPosition;
+                gameObjectToDrag.transform.position = TPos;
                 break;
             case "L":
-                gameObjectToDrag.transform.position = LPosition;
+                gameObjectToDrag.transform.position = LPos;
                 break;
             case "Line":
-                gameObjectToDrag.transform.position = linePosition;
+                gameObjectToDrag.transform.position = LinePos;
                 break;
             case "Two":
-                gameObjectToDrag.transform.position = twoPosition;
+                gameObjectToDrag.transform.position = TwoPos;
                 break;
             case "Dot":
-                gameObjectToDrag.transform.position = dotPosition;
+                gameObjectToDrag.transform.position = DotPos;
                 break;
             case "Square":
-                gameObjectToDrag.transform.position = squarePosition;
+                gameObjectToDrag.transform.position = SquarePos;
                 break;
         }
-        isSnappedIntoPlace = false;
+        snapsInPlace = false;
     }
 
-    void DoesItOverlap() {
-
+    void Overlap() {
+        string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
+        List<Vector3> piece = new List<Vector3>();
+        for (int i1 = 0; i1 < shapes.Length; i1++) {
+            string shape = shapes[i1];
+            if (Equals(shape, gameObjectToDrag.name)) {
+                piece.Add(GameObject.Find(shape).transform.position);
+                for (int i = 1; i < pieces; i++) {
+                    piece.Add(GameObject.Find(shape + i).transform.position);
+                }
+            } else {
+                new List<Vector3>().Add(GameObject.Find(shape).transform.position);
+                for (int i = 1; i < 5; i++) {
+                    if (GameObject.Find(shape + i) != null) {
+                        new List<Vector3>().Add(GameObject.Find(shape + i).transform.position);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < piece.Count; i++) {
+            for (int j = 0; j < new List<Vector3>().Count; j++) {
+                if (piece[i] == new List<Vector3>()[j]) {
+                    Reset();
+                }
+            }
+        }
     }
 
-    void PutBackToPreviousPosition() {
-
+    void PutBack() {
+        Reset();
+        snapsInPlace = false;
+        fits = false;
+        if (gameObjectCenter.y > -6 && gameObjectToDrag.transform.position.y <= -6 && !(gameObjectCenter.y <= -6 && gameObjectToDrag.transform.position.y <= -6)) {
+            if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
+                GameObject.Find("Grid").GetComponent<Wall>().count -= pieces;
+            } else {
+                GameObject.Find("Grid").GetComponent<Wall>().count = 0;
+            }
+        }
     }
 
     void Placed() {
-
+        if (snapsInPlace == true && gameObjectCenter.y <= -6) {
+            GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
+            GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
+        } else {
+            GameObject.Find("woosh").GetComponent<PlayClick>().PlayAudio();
+        }
     }
 
     void Pythagorean() {
-        PreparePythagorean();
-        DistanceToClosestEmptySpace();
-    }
-
-    void PreparePythagorean() {
-        blankSquare = GameObject.FindGameObjectsWithTag("Blank");
-        piecesOnBoard = GameObject.FindGameObjectsWithTag("Block");
-        checkOverlaps.Clear();
-        foreach (GameObject spot in blankSquare) {
-            checkOverlaps.Add(spot.transform.position);
+        blankSquares = GameObject.FindGameObjectsWithTag("Blank");
+        onBoard = GameObject.FindGameObjectsWithTag("Block");
+        overlapCheck.Clear();
+        foreach (GameObject spot in blankSquares) {
+            overlapCheck.Add(spot.transform.position);
         }
-        fitsInSpace = false;
-        closest = TPosition;
-        second = TPosition;
-        third = TPosition;
-    }
-
-    void DistanceToClosestEmptySpace() {
-        foreach (Vector3 check in checkOverlaps) {
-            sideA = gameObjectToDrag.transform.position.x - check.x;
-            sideB = gameObjectToDrag.transform.position.y - check.y;
-            sideA = Mathf.Pow(sideA, 2);
-            sideB = Mathf.Pow(sideB, 2);
-            sideC = sideA + sideB;
-            sideC = Mathf.Sqrt(sideC);
-            IsSideCSmallestDistance(check);
+        float a;
+        float b;
+        float c;
+        float least = 1000;
+        fits = false;
+        Vector3 closest = TPos;
+        Vector3 second = TPos;
+        Vector3 third = TPos;
+        foreach (Vector3 che in overlapCheck) {
+            a = gameObjectToDrag.transform.position.x - che.x;
+            b = gameObjectToDrag.transform.position.y - che.y;
+            a = Mathf.Pow(a, 2);
+            b = Mathf.Pow(b, 2);
+            c = a + b;
+            c = Mathf.Sqrt(c);
+            if (c < least && c < 1.5) {
+                third = second;
+                second = closest;
+                closest = che;
+                least = c;
+            }
         }
-    }
 
-    void IsSideCSmallestDistance(Vector3 checker) {
-        if (sideC < least && sideC < 1.5) {
-            third = second;
-            second = closest;
-            closest = checker;
-            least = sideC;
+        gameObjectToDrag.transform.position = closest;
+        if (pieces > 1) {
+            for (int j = 1; j < 4; j++) {
+                if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                    if (overlapCheck.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                        fits = true;
+                    } else {
+                        fits = false;
+                        snapsInPlace = false;
+                        break;
+                    }
+                }
+            }
+        } else if (pieces == 1) {
+            fits = true;
         }
-    }
-
-    IEnumerator Wait(int waitTime) {
-        yield return new WaitForSeconds(waitTime);
-
+        if (fits == true) {
+            snapsInPlace = true;
+        } else {
+            gameObjectToDrag.transform.position = second; // first spot failed
+            if (pieces > 1) {
+                for (int j = 1; j < 4; j++) {
+                    if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                        if (overlapCheck.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                            fits = true;
+                        } else {
+                            fits = false;
+                            snapsInPlace = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (fits == true) {
+                snapsInPlace = true;
+            } else {
+                gameObjectToDrag.transform.position = third; // second spot failed
+                if (pieces > 1) {
+                    for (int j = 1; j < 4; j++) {
+                        if (GameObject.Find(gameObjectToDrag.name + j) != null) {
+                            if (overlapCheck.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+                                fits = true;
+                            } else {
+                                fits = false;
+                                snapsInPlace = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (fits == true) {
+                    snapsInPlace = true;
+                } else {
+                    PutBack(); // third spot failed
+                    fits = false;
+                    snapsInPlace = false;
+                }
+            }
+        }
     }
 }
