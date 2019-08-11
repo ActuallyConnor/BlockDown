@@ -46,27 +46,24 @@ public class Block : MonoBehaviour {
         ChangeWallSpeed();
     }
 
+    public float gridX = GameObject.Find("Grid").transform.position.x;
+    public float gridY = GameObject.Find("Grid").transform.position.y;
+    public int wallCount = GameObject.Find("Grid").GetComponent<Wall>().count;
+    public 
+
     void ChangeWallSpeed() {
-        if (snapsInPlace && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
-            if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 59) {
-                SetWallSpeed(-1.4f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 49) {
-                SetWallSpeed(-1.3f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 39) {
-                SetWallSpeed(-1.2f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 29) {
-                SetWallSpeed(-1.1f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 19) {
-                SetWallSpeed(-1.0f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 13) {
-                SetWallSpeed(-1.1f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 7) {
-                SetWallSpeed(-1.3f);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 2) {
-                SetWallSpeed(-1.4f);
-            } else {
-                SetWallSpeed(-1.5f);
+        if (snapsInPlace && gridY > 0 && wallCount < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+            int[] levels = { 2, 7, 13, 19, 29, 39, 49, 59 };
+            float[] wallSpeed = { -1.5f, -1.4f, -1.3f, -1.1f, -1.0f, -1.2f, -1.3f, -1.4f };
+            for (int i = 0; i < levels.Length; i++) {
+                SetWallSpeed(wallSpeed[i], levels[i]);
             }
+        }
+    }
+
+    void SetWallSpeed(float speed, int levelsPassed) {
+        if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > levelsPassed) {
+            SetWallSpeed(speed);
         }
     }
 
@@ -133,7 +130,7 @@ public class Block : MonoBehaviour {
             GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             foreach (GameObject go in stopDeterminer) {
                 go.transform.Translate(new Vector3(0, 0, 0));
-                StartCoroutine("WinWait");
+                StartCoroutine("Wait");
             }
         }
     }
