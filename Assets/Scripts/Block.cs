@@ -43,17 +43,17 @@ public class Block : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        ChangeWallSpeed();
+        SetPieceSpeed();
     }
 
     public float gridX = GameObject.Find("Grid").transform.position.x;
     public float gridY = GameObject.Find("Grid").transform.position.y;
     public int wallCount = GameObject.Find("Grid").GetComponent<Wall>().count;
-    public 
+    public int wallPresetLength = GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length;
 
-    void ChangeWallSpeed() {
-        if (snapsInPlace && gridY > 0 && wallCount < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
-            int[] levels = { 2, 7, 13, 19, 29, 39, 49, 59 };
+    void SetPieceSpeed() {
+        if (snapsInPlace && gridY > 0 && wallCount < wallPresetLength) {
+            int[] levels = { 0, 2, 7, 13, 19, 29, 39, 49, 59 };
             float[] wallSpeed = { -1.5f, -1.4f, -1.3f, -1.1f, -1.0f, -1.2f, -1.3f, -1.4f };
             for (int i = 0; i < levels.Length; i++) {
                 SetWallSpeed(wallSpeed[i], levels[i]);
@@ -61,8 +61,9 @@ public class Block : MonoBehaviour {
         }
     }
 
+    public int gridLevelCounter = GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed();
     void SetWallSpeed(float speed, int levelsPassed) {
-        if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > levelsPassed) {
+        if (gridLevelCounter > levelsPassed) {
             SetWallSpeed(speed);
         }
     }
@@ -126,8 +127,8 @@ public class Block : MonoBehaviour {
     }
 
     void DoesPlacingPieceWin() {
-        if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
+        if (wallCount >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
+            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(gridLevelCounter + 1);
             foreach (GameObject go in stopDeterminer) {
                 go.transform.Translate(new Vector3(0, 0, 0));
                 StartCoroutine("Wait");
@@ -245,17 +246,17 @@ public class Block : MonoBehaviour {
 
     void DecreaseWallPiecesCount() {
         if (gameObjectCenter.y > -6 && gameObjectToDrag.transform.position.y <= -6 && !(gameObjectCenter.y <= -6 && gameObjectToDrag.transform.position.y <= -6)) {
-            if (GameObject.Find("Grid").GetComponent<Wall>().count - pieces >= 0) {
-                GameObject.Find("Grid").GetComponent<Wall>().count -= pieces;
+            if (wallCount - pieces >= 0) {
+                wallCount -= pieces;
             } else {
-                GameObject.Find("Grid").GetComponent<Wall>().count = 0;
+                wallCount = 0;
             }
         }
     }
 
     void Placed() {
         if (snapsInPlace == true && gameObjectCenter.y <= -6) {
-            GameObject.Find("Grid").GetComponent<Wall>().count += pieces;
+            wallCount += pieces;
             GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
         } else {
             GameObject.Find("woosh").GetComponent<PlayClick>().PlayAudio();

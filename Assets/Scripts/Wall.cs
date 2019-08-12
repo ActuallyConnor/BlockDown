@@ -16,45 +16,57 @@ public class Wall : MonoBehaviour {
     public int GetPassed() {
         return passed / 2;
     }
-    // Start is called before the first frame update
+
     void Start() {
         LoadLevel();
         GameObject.Find("Text").GetComponent<TextMesh>().text = (setups.GetPassed()).ToString();
     }
 
-    // Update is called once per frame
     void Update() {
+        ContinueOrEndGame();
+        CountExceedsEmptySpaces();
+        OnPCSkipToNextLevel();
+    }
+
+    void ContinueOrEndGame() {
         if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
-            if (setups.GetPassed() > 59) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 49) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 39) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 29) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 19) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 13) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 7) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 2) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
-            }            
+            int[] levels = { 0, 2, 7, 13, 19, 29, 39, 49, 59 };
+            float[] wallSpeed = { -1.5f, -1.4f, -1.3f, -1.1f, -1.0f, -1.2f, -1.3f, -1.4f };
+            for (int i = 0; i < levels.Length; i++) {
+                SetWallSpeed(levels[i], wallSpeed[i]);
+            }
         } else if (count >= setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
-            StartCoroutine("WinWait");
+            AfterWinStopMovingWall();
         } else {
-            GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
-            setups.SetPassed(0);
-            SceneManager.LoadScene("GameOver");
+            AfterLossStopMovingWall();
         }
+    }
+
+    void SetWallSpeed(int levelsPassed, float speed) {
+        if (setups.GetPassed() > levelsPassed) {
+            GameObject.Find("Grid").transform.Translate(new Vector3(0, speed, 0) * Time.deltaTime, Space.World);
+
+        }
+    }
+
+    void AfterWinStopMovingWall() {
+        GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
+        StartCoroutine("WinWait");
+    }
+
+    void AfterLossStopMovingWall() {
+        GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
+        setups.SetPassed(0);
+        SceneManager.LoadScene("GameOver");
+    }
+
+    void CountExceedsEmptySpaces() {
         if (count >= setups.GetPreset(0).Length) {
-            StartCoroutine("WinWait");            
+            StartCoroutine("WinWait");
         }
+    }
+
+    void OnPCSkipToNextLevel() {
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             SceneManager.LoadScene("Level");
         }
@@ -75,5 +87,7 @@ public class Wall : MonoBehaviour {
         squares = GameObject.FindGameObjectsWithTag("Blank");
     }
 
-    public int[] GetSetup() => setups.GetPreset(0);
+    public int[] GetSetup() {
+        return setups.GetPreset(0);
+    }
 }
