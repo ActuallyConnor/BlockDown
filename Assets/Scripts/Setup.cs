@@ -22,21 +22,21 @@ public class Setup {
     public int[] created;
 
     public Setup() {
-        if (GetPassed() > 19) {
-            created = Create(6);
-        } else if (GetPassed() > 13) {
-            created = Create(5);
-        } else if (GetPassed() > 7) {
-            created = Create(4);
-        } else if (GetPassed() > 2) {
-            created = Create(3);
-        } else {
-            created = Create(2);
-        }        
+        int[] checkpoints = { -1, 2, 7, 13, 19 };
+        int[] createNumbers = { 2, 3, 4, 5, 6 };
+
+        for (int i = checkpoints.Length - 1; i > -1; i--) {
+            if (GetPassed() > checkpoints[i]) {
+                created = Create(createNumbers[i]);
+                break;
+            }
+        }
         presets.Add(created);
     }
 
-    public int[] GetPreset(int index) => presets[index];
+    public int[] GetPreset(int index) {
+        return presets[index];
+    }
 
     public List<int> GetBoard(int index) {
         foreach (int i in presets[index]) {
@@ -47,47 +47,40 @@ public class Setup {
 
     int[] Create(int p) {
         string[] toUse = RandGen();
-        int[] changes = new int[] {
-            1, -1, 10, -10
-        };
-
-        List<int> onBoard = new List<int>();
-        switch (toUse[0]) {
-            case "T":                
-                onBoard.AddRange(TShape(23));
-                break;
-            case "L":
-                onBoard.AddRange(LShape(23));
-                break;
-            case "Square":
-                onBoard.AddRange(Square(23));
-                break;
-            case "Line":
-                onBoard.AddRange(Line(23));
-                break;
-            case "Two":
-                onBoard.AddRange(Two(23));
-                break;
-            case "Dot":
-                onBoard.AddRange(Dot(23));
-                break;
-        }
-        Console.WriteLine(toUse[0]);
-        Console.WriteLine("First piece placed");
+        List<int> onBoard = PlaceFirstPieceOnBoard(toUse[0]);
         onBoard = Place(onBoard, toUse[1]);
-        if (p > 2) {
-            onBoard = Place(onBoard, toUse[2]);
-        }
-        if (p > 3) {
-            onBoard = Place(onBoard, toUse[3]);
-        }
-        if (p > 4) {
-            onBoard = Place(onBoard, toUse[4]);
-        }
-        if (p > 5) {
-            onBoard = Place(onBoard, toUse[5]);
+        for (int i = 5; i > -1; i--) {
+            if (p > i) {
+                onBoard = Place(onBoard, toUse[i]);
+                break;
+            }
         }
         return onBoard.ToArray();
+    }
+
+    List<int> PlaceFirstPieceOnBoard(string firstPiece) {
+        List<int> onBoard = new List<int>();
+        string[] shapeTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        int[][] shapeSetups = { TShape(23), LShape(23), Square(23), Line(23), Two(23), Dot(23) };
+        for (int i = 0; i < shapeTypes.Length; i++) {
+            if (string.Equals(firstPiece, shapeTypes[i])) {
+                onBoard.AddRange(shapeSetups[i]);
+                break;
+            }
+        }
+        return onBoard;
+    }
+
+    List<int> CheckIfPieceFits(List<int> temp, int store, string toUse) {
+        string[] shapeTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        int[][] shapeSetups = { TShape(store), LShape(store), Square(store), Line(store), Two(store), Dot(store) };
+        for (int i = 0; i < shapeTypes.Length; i++) {
+            if (string.Equals(toUse, shapeTypes[i])) {
+                temp.AddRange(shapeSetups[i]);
+                break;
+            }
+        }
+        return temp;
     }
 
     List<int> Place(List<int> onBoard, string toUse) {
@@ -98,6 +91,7 @@ public class Setup {
         int store = 0;
         bool placed = false;
         bool again = false;
+
         while (placed == false) {
             again = false;
             placeChanges.Add(1); placeChanges.Add(-1); placeChanges.Add(10); placeChanges.Add(-10);
@@ -106,26 +100,30 @@ public class Setup {
             store = onBoard[oldp];
             newp = rand.Next(0, placeChanges.Count);
             store += placeChanges[newp];
+
             switch (toUse) {
                 case "T":
-                    temp.AddRange(TShape(store));
-                    break;
+                temp.AddRange(TShape(store));
+                break;
                 case "L":
-                    temp.AddRange(LShape(store));
-                    break;
+                temp.AddRange(LShape(store));
+                break;
                 case "Square":
-                    temp.AddRange(Square(store));
-                    break;
+                temp.AddRange(Square(store));
+                break;
                 case "Line":
-                    temp.AddRange(Line(store));
-                    break;
+                temp.AddRange(Line(store));
+                break;
                 case "Two":
-                    temp.AddRange(Two(store));
-                    break;
+                temp.AddRange(Two(store));
+                break;
                 case "Dot":
-                    temp.AddRange(Dot(store));
-                    break;
+                temp.AddRange(Dot(store));
+                break;
             }
+
+            //temp = CheckIfPieceFits(temp, store, toUse);
+
             foreach (int t in temp) {
                 if (t > 59 || t < 0) {
                     again = true;

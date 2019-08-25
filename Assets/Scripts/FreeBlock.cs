@@ -30,7 +30,6 @@ public class FreeBlock : MonoBehaviour {
     public GameObject[] onBoard;
     bool fits;
 
-    // Start is called before the first frame update
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
         LPos = new Vector3(-3, -6, 0);
@@ -40,33 +39,11 @@ public class FreeBlock : MonoBehaviour {
         TwoPos = new Vector3(1, (float)-8.5, 0);
         DotPos = new Vector3(4, (float)-8.5, 0);
 
-        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
-    // Update is called once per frame
     void Update() {
-        //if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<FreeWall>().count < GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
-        //    if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 59) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 49) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 39) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 29) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 19) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 13) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 7) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-        //    } else if (GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() > 2) {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-        //    } else {
-        //        GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
-        //    }
-        //}
+
     }
 
     IEnumerator WinWait() {
@@ -103,15 +80,22 @@ public class FreeBlock : MonoBehaviour {
             PutBack();
         }
         SendToBottom();
-        //Debug.Log(GameObject.Find("Grid").GetComponent<FreeWall>().count);
         if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + 1);
+            GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + ThirtyMinusTimePassed());
             foreach (GameObject go in stop) {
                 go.transform.Translate(new Vector3(0, 0, 0));
                 StartCoroutine("WinWait");
             }
         }
         Resize();
+    }
+
+    int ThirtyMinusTimePassed() {
+        int passed = 50 - (int)Time.timeSinceLevelLoad;
+        if (passed < 1) {
+            return 1;
+        }
+        return 30 - (int)Time.timeSinceLevelLoad;
     }
 
     void Resize() {
@@ -203,7 +187,7 @@ public class FreeBlock : MonoBehaviour {
     }
 
     void Overlap() {
-        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot", "Square" };
+        string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
         List<Vector3> onBoard = new List<Vector3>();
         foreach (string shape in shapes) {

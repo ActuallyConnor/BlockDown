@@ -3,34 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour {
-
-    public GameObject gameObjectToDrag; 
-    public Vector3 GOCentre;
-    public Vector3 touchPosition; 
-    public Vector3 offset; 
-    public Vector3 newGOCentre; 
-    RaycastHit hit; 
-    public bool draggingMode = false;  
+ 
     public bool snap = false;
+
+    public int pieces = 0;
+    List<Vector3> roundWall;
+    List<Vector3> wall;
+    public int count = 0;
+    public GameObject[] spots;
+    public List<Vector3> check = new List<Vector3>();
+    public GameObject[] onBoard;
+    bool fits;
+
+
     public Vector3 TPos;
     public Vector3 LPos;
     public Vector3 LinePos;
     public Vector3 TwoPos;
     public Vector3 DotPos;
     public Vector3 SquarePos;
-    public int pieces = 0;
-    List<Vector3> roundWall;
-    List<Vector3> wall;
-    public int count = 0;
     public GameObject[] stop;
-    public GameObject[] spots;
-    public List<Vector3> check = new List<Vector3>();
-    public GameObject[] onBoard;
-    bool fits;
 
-    // Start is called before the first frame update
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
         LPos = new Vector3(-3, -6, 0);
@@ -40,39 +36,41 @@ public class Block : MonoBehaviour {
         TwoPos = new Vector3(1, (float)-8.5, 0);
         DotPos = new Vector3(4, (float)-8.5, 0);
 
-        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
-    // Update is called once per frame
     void Update() {
-        if (snap && GameObject.Find("Grid").transform.position.y > 0 && GameObject.Find("Grid").GetComponent<Wall>().count < GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
-            if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 59) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 49) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 39) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 29) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 19) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 13) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 7) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() > 2) {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else {
-                GameObject.Find(gameObjectToDrag.name).transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
+
+        float gridY = GameObject.Find("Grid").transform.position.y;
+        int wallCount = GameObject.Find("Grid").GetComponent<Wall>().count;
+        int numberOfSpacesInWall = GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length;
+        int levelsPassed = GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed();
+        Transform currentMovingObject = GameObject.Find(gameObjectToDrag.name).transform;
+
+        int[] levelCheckpoints = { -1, 2, 7, 13, 19, 29, 39, 49, 59 };
+        float[] speeds = { -1.5f, -1.4f, -1.2f, -1.1f, -1.0f, -1.1f, -1.2f, -1.3f, -1.4f };
+
+        if (snap && gridY > 0 && wallCount < numberOfSpacesInWall) {
+            for (int i = speeds.Length - 1; i > -1; i--) {
+                if (levelsPassed > levelCheckpoints[i]) {
+                    currentMovingObject.Translate(new Vector3(0, speeds[i], 0) * Time.deltaTime, Space.World);
+                    break;
+                }
             }
         }        
     }
 
     IEnumerator WinWait() {        
         yield return new WaitForSeconds(1);
-
     }
+
+    public GameObject gameObjectToDrag;
+    public Vector3 GOCentre;
+    public Vector3 touchPosition;
+    public Vector3 offset;
+    public Vector3 newGOCentre;
+    RaycastHit hit;
+    public bool draggingMode = false;
 
     void OnMouseDown() { 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
@@ -99,11 +97,19 @@ public class Block : MonoBehaviour {
         Pythagorean();
         Overlap();
         Placed();
+        SinglePiecePutBack();
+        SendToBottom();
+        PlacingPieceWinsGame();
+        Resize();
+    }
+
+    void SinglePiecePutBack() {
         if (pieces == 1 && gameObjectToDrag.transform.position.y <= -6 && GOCentre.y > -6) {
             PutBack();
         }
-        SendToBottom();
-        //Debug.Log(GameObject.Find("Grid").GetComponent<Wall>().count);
+    }
+
+    void PlacingPieceWinsGame() {
         if (GameObject.Find("Grid").GetComponent<Wall>().count >= GameObject.Find("Grid").GetComponent<Wall>().setups.GetPreset(0).Length) {
             GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             foreach (GameObject go in stop) {
@@ -111,51 +117,24 @@ public class Block : MonoBehaviour {
                 StartCoroutine("WinWait");
             }
         }
-        Resize();
     }
 
     void Resize() {
         if (gameObjectToDrag.transform.position.y > -6) {
-            switch (gameObjectToDrag.name) {
-                case "T":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 2, 0);
-                    break;
-                case "L":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
-                    break;
-                case "Square":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
-                    break;
-                case "Line":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 1, 0);
-                    break;
-                case "Two":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 1, 0);
-                    break;
-                case "Dot":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0);
-                    break;
-            }
+            setPieceSize(gameObjectToDrag.name, 0f);
         } else {
-            switch (gameObjectToDrag.name) {
-                case "T":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)2.5, 0);
-                    break;
-                case "L":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
-                    break;
-                case "Square":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
-                    break;
-                case "Line":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)1.5, 0);
-                    break;
-                case "Two":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)1.5, 0);
-                    break;
-                case "Dot":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)1.5, (float)1.5, 0);
-                    break;
+            setPieceSize(gameObjectToDrag.name, 0.5f);
+        }
+    }
+
+    void setPieceSize(string currentPiece, float increment) {
+        string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        float[,] positioning = { { 3f, 2f }, { 2f, 2f}, { 2f, 2f }, { 3f, 1f }, { 2f, 1f }, { 1f, 1f } };
+        BoxCollider currentBox = gameObjectToDrag.GetComponent<BoxCollider>();
+
+        for (int i = 0; i < pieceTypes.Length; i++) {
+            if (string.Equals(currentPiece, pieceTypes[i])) {
+                currentBox.size = new Vector3(positioning[i, 0] + increment, positioning[i, 1] + increment, 0);
             }
         }
     }
@@ -179,31 +158,20 @@ public class Block : MonoBehaviour {
     }
 
     void Reset() {
-        switch (gameObjectToDrag.name) {
-            case "T":
-                gameObjectToDrag.transform.position = TPos;
+        string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        Vector3[] positions = { TPos, LPos, SquarePos, LinePos, TwoPos, DotPos };
+
+        for (int i = 0; i < pieceTypes.Length; i++) {
+            if (string.Equals(gameObjectToDrag.name, pieceTypes[i])) {
+                gameObjectToDrag.transform.position = positions[i];
                 break;
-            case "L":
-                gameObjectToDrag.transform.position = LPos;
-                break;
-            case "Line":
-                gameObjectToDrag.transform.position = LinePos;
-                break;
-            case "Two":
-                gameObjectToDrag.transform.position = TwoPos;
-                break;
-            case "Dot":
-                gameObjectToDrag.transform.position = DotPos;
-                break;
-            case "Square":
-                gameObjectToDrag.transform.position = SquarePos;
-                break;
+            }
         }
         snap = false;
     }
 
     void Overlap() {
-        string[] shapes = new string[] { "T", "L", "Line", "Two", "Dot", "Square" };
+        string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
         List<Vector3> onBoard = new List<Vector3>();
         foreach (string shape in shapes) {

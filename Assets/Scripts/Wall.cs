@@ -24,27 +24,24 @@ public class Wall : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (GameObject.Find("Grid").transform.position.y > 0.5 && count < setups.GetPreset(0).Length) {
-            if (setups.GetPassed() > 59) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 49) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.3, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 39) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 29) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 19) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.0, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 13) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.1, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 7) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.2, 0) * Time.deltaTime, Space.World);
-            } else if (setups.GetPassed() > 2) {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.4, 0) * Time.deltaTime, Space.World);
-            } else {
-                GameObject.Find("Grid").transform.Translate(new Vector3(0, (float)-1.5, 0) * Time.deltaTime, Space.World);
-            }            
-        } else if (count >= setups.GetPreset(0).Length) {
+
+        float gridY = GameObject.Find("Grid").transform.position.y;
+        int numberOfSpacesInWall = setups.GetPreset(0).Length;
+        int levelsPassed = setups.GetPassed();
+        Transform gridToMove = GameObject.Find("Grid").transform;
+
+        int[] levelCheckpoints = { -1, 2, 7, 13, 19, 29, 39, 49, 59 };
+        float[] speeds = { -1.5f, -1.4f, -1.2f, -1.1f, -1.0f, -1.1f, -1.2f, -1.3f, -1.4f };
+
+        if (gridY > 0.5 && count < numberOfSpacesInWall) {
+            for (int i = speeds.Length - 1; i > -1; i--) {
+                if (levelsPassed > levelCheckpoints[i]) {
+                    gridToMove.Translate(new Vector3(0, speeds[i], 0) * Time.deltaTime, Space.World);
+                    break;
+                }
+            }
+        }          
+         else if (count >= setups.GetPreset(0).Length) {
             GameObject.Find("Grid").transform.Translate(new Vector3(0, 0, 0));
             StartCoroutine("WinWait");
         } else {
@@ -56,6 +53,7 @@ public class Wall : MonoBehaviour {
             StartCoroutine("WinWait");            
         }
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
+            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             SceneManager.LoadScene("Level");
         }
     }
