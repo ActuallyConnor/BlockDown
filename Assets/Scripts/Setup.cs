@@ -16,8 +16,9 @@ public class Setup {
         40, 41, 42, 43, 44, 45, 46, 47, 48,
         50, 51, 52, 53, 54, 55, 56, 57, 58
     };
+
     List<int[]> presets = new List<int[]>();
-    public static int passed = 0;
+    public static int passed;
     public int num = 2;
     public int[] created;
 
@@ -31,6 +32,7 @@ public class Setup {
                 break;
             }
         }
+
         presets.Add(created);
     }
 
@@ -49,7 +51,7 @@ public class Setup {
         string[] toUse = RandGen();
         List<int> onBoard = PlaceFirstPieceOnBoard(toUse[0]);
         onBoard = Place(onBoard, toUse[1]);
-        for (int i = 5; i > -1; i--) {
+        for (int i = 5; i > 1; i--) {
             if (p > i) {
                 onBoard = Place(onBoard, toUse[i]);
                 break;
@@ -83,14 +85,27 @@ public class Setup {
         return temp;
     }
 
+    bool PieceFitsInBoard(int k) {
+        bool outside =  k < 0 || k > 58;
+        bool notAllowed = false;
+        int[] outsideNumbers = { 9, 19, 29, 39, 49 };
+        for (int i = 0; i < outsideNumbers.Length; i++) {
+            if (k == outsideNumbers[i]) {
+                notAllowed = true;
+                break;
+            }
+        }
+        return outside && notAllowed;
+    }
+
     List<int> Place(List<int> onBoard, string toUse) {
         List<int> placeChanges = new List<int>();
-        List<int> temp = new List<int>();
-        int oldp = 0;
-        int newp = 0;
-        int store = 0;
+        List<int> temp;
+        int oldp;
+        int newp;
+        int store;
         bool placed = false;
-        bool again = false;
+        bool again;
 
         while (placed == false) {
             again = false;
@@ -101,35 +116,16 @@ public class Setup {
             newp = rand.Next(0, placeChanges.Count);
             store += placeChanges[newp];
 
-            switch (toUse) {
-                case "T":
-                temp.AddRange(TShape(store));
-                break;
-                case "L":
-                temp.AddRange(LShape(store));
-                break;
-                case "Square":
-                temp.AddRange(Square(store));
-                break;
-                case "Line":
-                temp.AddRange(Line(store));
-                break;
-                case "Two":
-                temp.AddRange(Two(store));
-                break;
-                case "Dot":
-                temp.AddRange(Dot(store));
-                break;
-            }
-
-            //temp = CheckIfPieceFits(temp, store, toUse);
+            temp = CheckIfPieceFits(temp, store, toUse);
 
             foreach (int t in temp) {
-                if (t > 59 || t < 0) {
-                    again = true;
+                again = PieceFitsInBoard(t);
+                if (again == true) {
+                    break;
                 }
             }
-            if (temp.Distinct().Count() != temp.Count || again == true) { // first place didn't work
+
+            if (temp.Distinct().Count() != temp.Count || again == true) {
                 again = false;
                 store = 0;
                 temp = onBoard.ToList();
@@ -137,32 +133,17 @@ public class Setup {
                 store = onBoard[oldp];
                 newp = rand.Next(0, placeChanges.Count);
                 store += placeChanges[newp];
-                switch (toUse) {
-                    case "T":
-                        temp.AddRange(TShape(store));
-                        break;
-                    case "L":
-                        temp.AddRange(LShape(store));
-                        break;
-                    case "Square":
-                        temp.AddRange(Square(store));
-                        break;
-                    case "Line":
-                        temp.AddRange(Line(store));
-                        break;
-                    case "Two":
-                        temp.AddRange(Two(store));
-                        break;
-                    case "Dot":
-                        temp.AddRange(Dot(store));
-                        break;
-                }
+
+                temp = CheckIfPieceFits(temp, store, toUse);
+
                 foreach (int t in temp) {
-                    if (t > 59 || t < 0) {
-                        again = true;
+                    again = PieceFitsInBoard(t);
+                    if (again == true) {
+                        break;
                     }
                 }
-                if (temp.Distinct().Count() != temp.Count || again == true) { // second place didn't work
+
+                if (temp.Distinct().Count() != temp.Count || again == true) {
                     again = false;
                     store = 0;
                     temp = onBoard.ToList();
@@ -170,32 +151,15 @@ public class Setup {
                     store = onBoard[oldp];
                     newp = rand.Next(0, placeChanges.Count);
                     store += placeChanges[newp];
-                    switch (toUse) {
-                        case "T":
-                            temp.AddRange(TShape(store));
-                            break;
-                        case "L":
-                            temp.AddRange(LShape(store));
-                            break;
-                        case "Square":
-                            temp.AddRange(Square(store));
-                            break;
-                        case "Line":
-                            temp.AddRange(Line(store));
-                            break;
-                        case "Two":
-                            temp.AddRange(Two(store));
-                            break;
-                        case "Dot":
-                            temp.AddRange(Dot(store));
-                            break;
-                    }
+
+                    temp = CheckIfPieceFits(temp, store, toUse);
+
                     foreach (int t in temp) {
                         if (t > 59 || t < 0) {
                             again = true;
                         }
                     }
-                    if (temp.Distinct().Count() != temp.Count || again == true) { // third place didn't work
+                    if (temp.Distinct().Count() != temp.Count || again == true) {
                         again = false;
                         store = 0;
                         temp = onBoard.ToList();
@@ -203,32 +167,17 @@ public class Setup {
                         store = onBoard[oldp];
                         newp = rand.Next(0, placeChanges.Count);
                         store += placeChanges[newp];
-                        switch (toUse) {
-                            case "T":
-                                temp.AddRange(TShape(store));
-                                break;
-                            case "L":
-                                temp.AddRange(LShape(store));
-                                break;
-                            case "Square":
-                                temp.AddRange(Square(store));
-                                break;
-                            case "Line":
-                                temp.AddRange(Line(store));
-                                break;
-                            case "Two":
-                                temp.AddRange(Two(store));
-                                break;
-                            case "Dot":
-                                temp.AddRange(Dot(store));
-                                break;
-                        }
+
+                        temp = CheckIfPieceFits(temp, store, toUse);
+
                         foreach (int t in temp) {
-                            if (t > 59 || t < 0) {
-                                again = true;
+                            again = PieceFitsInBoard(t);
+                            if (again == true) {
+                                break;
                             }
                         }
-                        if (temp.Distinct().Count() != temp.Count || again == true) { // fourth place didn't work
+
+                        if (temp.Distinct().Count() != temp.Count || again == true) { 
                             again = false;
                             placed = false;
                         } else {
