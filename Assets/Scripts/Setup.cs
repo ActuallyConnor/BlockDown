@@ -8,7 +8,7 @@ public class Setup {
 
     System.Random rand = new System.Random();
 
-    List<int> defaultBoard = new List<int>() {
+    List<int> defaultBoard = new List<int> {
         0, 1, 2, 3, 4, 5, 6, 7, 8,
         10, 11, 12, 13, 14, 15, 16, 17, 18,
         20, 21, 22, 23, 24, 25, 26, 27, 28,
@@ -27,7 +27,7 @@ public class Setup {
         int[] createNumbers = { 2, 3, 4, 5, 6 };
 
         for (int i = checkpoints.Length - 1; i > -1; i--) {
-            if (GetPassed() > checkpoints[i]) {
+            if (GetPassed() >= checkpoints[i]) {
                 created = Create(createNumbers[i]);
                 break;
             }
@@ -95,7 +95,7 @@ public class Setup {
                 break;
             }
         }
-        return outside && notAllowed;
+        return outside || notAllowed;
     }
 
     List<int> Place(List<int> onBoard, string toUse) {
@@ -197,8 +197,6 @@ public class Setup {
                 placed = true;
             }
         }
-        Console.WriteLine(toUse);
-        Console.WriteLine("Piece placed");
         return onBoard.ToList();
     }
 

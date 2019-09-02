@@ -29,7 +29,14 @@ public class BottomMenu : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit)) {
             if (hit.collider.gameObject.name == "arrow") {
-                SceneManager.LoadScene("MainMenu");
+                if (GameObject.Find("Grid")) {
+                    if (string.Equals(SceneManager.GetActiveScene().name, "Level")) {
+                            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(0);
+                    } else {
+                        GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(0);
+                    }
+                }
+                    SceneManager.LoadScene("MainMenu");
             }
             if (hit.collider.gameObject.name == "speaker") {
                 if (volume == true) {

@@ -81,7 +81,7 @@ public class Block : MonoBehaviour {
             offset = touchPosition - GOCentre; 
             draggingMode = true; 
             SendToTop();
-        }       
+        }
     }
 
     void OnMouseDrag() { 

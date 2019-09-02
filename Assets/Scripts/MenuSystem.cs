@@ -9,7 +9,7 @@ public class MenuSystem : MonoBehaviour {
     static bool volume = true;
 
     void Start() {
-        
+
     }
 
     void OnMouseDown() {
@@ -24,7 +24,10 @@ public class MenuSystem : MonoBehaviour {
             if (hit.collider.gameObject.name == "button (2)") {
                 SceneManager.LoadScene("MainMenu");
             }
-            if (hit.collider.gameObject.name == "speaker") {
+			if (hit.collider.gameObject.name == "button (4)") {
+				SceneManager.LoadScene("Score");
+			}
+			if (hit.collider.gameObject.name == "speaker") {
                 if (volume == true) {
                     AudioListener.volume = 0;
                     GameObject.Find("slash").transform.position = new Vector3(4, (float)-10.5, 0);

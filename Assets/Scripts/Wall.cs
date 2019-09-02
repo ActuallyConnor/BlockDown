@@ -16,13 +16,19 @@ public class Wall : MonoBehaviour {
     public int GetPassed() {
         return passed / 2;
     }
-    // Start is called before the first frame update
+
     void Start() {
         LoadLevel();
-        GameObject.Find("Text").GetComponent<TextMesh>().text = (setups.GetPassed()).ToString();
-    }
+        GameObject.Find("Text").GetComponent<TextMesh>().text = setups.GetPassed().ToString();
+        PlayerPrefs.SetInt("score", setups.GetPassed());
+        int highscore = PlayerPrefs.GetInt("highscore", 0);
+        if (setups.GetPassed() > highscore) {
+            highscore = setups.GetPassed();
 
-    // Update is called once per frame
+            PlayerPrefs.SetInt("highscore", highscore);
+        }
+	}
+
     void Update() {
 
         float gridY = GameObject.Find("Grid").transform.position.y;
@@ -53,7 +59,7 @@ public class Wall : MonoBehaviour {
             StartCoroutine("WinWait");            
         }
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
-            GameObject.Find("Grid").GetComponent<Wall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
+            setups.SetPassed(GameObject.Find("Grid").GetComponent<Wall>().setups.GetPassed() + 1);
             SceneManager.LoadScene("Level");
         }
     }
@@ -64,14 +70,22 @@ public class Wall : MonoBehaviour {
     }
 
     void LoadLevel() {
-        for (int i = 0; i < setups.GetPreset(0).Length; i++) {
-            GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);
-        }
-        for (int i = 0; i < setups.GetBoard(0).Count; i++) {
-            GameObject.Find("Square (" + (setups.GetBoard(0)[i]) + ")").SetActive(false);
-        }
-        squares = GameObject.FindGameObjectsWithTag("Blank");
+		for (int i = setups.GetPreset(0).Length - 1; i > -1; i--) {
+			GameObject.Find("Grid (" + setups.GetPreset(0)[i] + ")").SetActive(false);
+		}
+		for (int i = setups.GetBoard(0).Count - 1; i > -1; i--) {
+			GameObject.Find("Square (" + setups.GetBoard(0)[i] + ")").SetActive(false);
+		}
+		//for (int i = 0; i < setups.GetPreset(0).Length; i++) {
+		//    GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);
+		//}
+		//for (int i = 0; i < setups.GetBoard(0).Count; i++) {
+		//    GameObject.Find("Square (" + (setups.GetBoard(0)[i]) + ")").SetActive(false);
+		//}
+		squares = GameObject.FindGameObjectsWithTag("Blank");
     }
 
-    public int[] GetSetup() => setups.GetPreset(0);
+	public int[] GetSetup() {
+		return setups.GetPreset(0);
+	}
 }
