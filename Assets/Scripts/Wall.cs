@@ -76,12 +76,6 @@ public class Wall : MonoBehaviour {
 		for (int i = setups.GetBoard(0).Count - 1; i > -1; i--) {
 			GameObject.Find("Square (" + setups.GetBoard(0)[i] + ")").SetActive(false);
 		}
-		//for (int i = 0; i < setups.GetPreset(0).Length; i++) {
-		//    GameObject.Find("Grid (" + (setups.GetPreset(0)[i]) + ")").SetActive(false);
-		//}
-		//for (int i = 0; i < setups.GetBoard(0).Count; i++) {
-		//    GameObject.Find("Square (" + (setups.GetBoard(0)[i]) + ")").SetActive(false);
-		//}
 		squares = GameObject.FindGameObjectsWithTag("Blank");
     }
 

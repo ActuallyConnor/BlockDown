@@ -3,32 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FreeBlock : MonoBehaviour {
 
-    public GameObject gameObjectToDrag;
-    public Vector3 GOCentre;
-    public Vector3 touchPosition;
-    public Vector3 offset;
-    public Vector3 newGOCentre;
-    RaycastHit hit;
-    public bool draggingMode = false;
     public bool snap = false;
+
+    public int pieces = 0;
+    List<Vector3> roundFreeWall;
+    List<Vector3> wall;
+    public int count = 0;
+    public GameObject[] spots;
+    public List<Vector3> check = new List<Vector3>();
+    public GameObject[] onBoard;
+    bool fits;
+
+
     public Vector3 TPos;
     public Vector3 LPos;
     public Vector3 LinePos;
     public Vector3 TwoPos;
     public Vector3 DotPos;
     public Vector3 SquarePos;
-    public int pieces = 0;
-    List<Vector3> roundWall;
-    List<Vector3> wall;
-    public int count = 0;
     public GameObject[] stop;
-    public GameObject[] spots;
-    public List<Vector3> check = new List<Vector3>();
-    public GameObject[] onBoard;
-    bool fits;
 
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
@@ -46,10 +43,13 @@ public class FreeBlock : MonoBehaviour {
 
     }
 
-    IEnumerator WinWait() {
-        yield return new WaitForSeconds(1);
-
-    }
+    public GameObject gameObjectToDrag;
+    public Vector3 GOCentre;
+    public Vector3 touchPosition;
+    public Vector3 offset;
+    public Vector3 newGOCentre;
+    RaycastHit hit;
+    public bool draggingMode = false;
 
     void OnMouseDown() {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -76,17 +76,9 @@ public class FreeBlock : MonoBehaviour {
         Pythagorean();
         Overlap();
         Placed();
-        if (pieces == 1 && gameObjectToDrag.transform.position.y <= -6 && GOCentre.y > -6) {
-            PutBack();
-        }
+        SinglePiecePutBack();
         SendToBottom();
-        if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
-            GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + ThirtyMinusTimePassed());
-            foreach (GameObject go in stop) {
-                go.transform.Translate(new Vector3(0, 0, 0));
-                StartCoroutine("WinWait");
-            }
-        }
+        PlacingPieceWinsGame();
         Resize();
     }
 
@@ -98,48 +90,37 @@ public class FreeBlock : MonoBehaviour {
         return 30 - (int)Time.timeSinceLevelLoad;
     }
 
+    void SinglePiecePutBack() {
+        if (pieces == 1 && gameObjectToDrag.transform.position.y <= -6 && GOCentre.y > -6) {
+            PutBack();
+        }
+    }
+
+    void PlacingPieceWinsGame() {
+        if (GameObject.Find("Grid").GetComponent<FreeWall>().count >= GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPreset(0).Length) {
+            GameObject.Find("Grid").GetComponent<FreeWall>().setups.SetPassed(GameObject.Find("Grid").GetComponent<FreeWall>().setups.GetPassed() + ThirtyMinusTimePassed());
+            foreach (GameObject go in stop) {
+                go.transform.Translate(new Vector3(0, 0, 0));
+            }
+        }
+    }
+
     void Resize() {
         if (gameObjectToDrag.transform.position.y > -6) {
-            switch (gameObjectToDrag.name) {
-                case "T":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 2, 0);
-                    break;
-                case "L":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
-                    break;
-                case "Square":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 2, 0);
-                    break;
-                case "Line":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(3, 1, 0);
-                    break;
-                case "Two":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(2, 1, 0);
-                    break;
-                case "Dot":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3(1, 1, 0);
-                    break;
-            }
+            setPieceSize(gameObjectToDrag.name, 0f);
         } else {
-            switch (gameObjectToDrag.name) {
-                case "T":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)2.5, 0);
-                    break;
-                case "L":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
-                    break;
-                case "Square":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)2.5, 0);
-                    break;
-                case "Line":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)3.5, (float)1.5, 0);
-                    break;
-                case "Two":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)2.5, (float)1.5, 0);
-                    break;
-                case "Dot":
-                    gameObjectToDrag.GetComponent<BoxCollider>().size = new Vector3((float)1.5, (float)1.5, 0);
-                    break;
+            setPieceSize(gameObjectToDrag.name, 0.5f);
+        }
+    }
+
+    void setPieceSize(string currentPiece, float increment) {
+        string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        float[,] positioning = { { 3f, 2f }, { 2f, 2f }, { 2f, 2f }, { 3f, 1f }, { 2f, 1f }, { 1f, 1f } };
+        BoxCollider currentBox = gameObjectToDrag.GetComponent<BoxCollider>();
+
+        for (int i = 0; i < pieceTypes.Length; i++) {
+            if (string.Equals(currentPiece, pieceTypes[i])) {
+                currentBox.size = new Vector3(positioning[i, 0] + increment, positioning[i, 1] + increment, 0);
             }
         }
     }
@@ -163,25 +144,14 @@ public class FreeBlock : MonoBehaviour {
     }
 
     void Reset() {
-        switch (gameObjectToDrag.name) {
-            case "T":
-                gameObjectToDrag.transform.position = TPos;
+        string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
+        Vector3[] positions = { TPos, LPos, SquarePos, LinePos, TwoPos, DotPos };
+
+        for (int i = 0; i < pieceTypes.Length; i++) {
+            if (string.Equals(gameObjectToDrag.name, pieceTypes[i])) {
+                gameObjectToDrag.transform.position = positions[i];
                 break;
-            case "L":
-                gameObjectToDrag.transform.position = LPos;
-                break;
-            case "Line":
-                gameObjectToDrag.transform.position = LinePos;
-                break;
-            case "Two":
-                gameObjectToDrag.transform.position = TwoPos;
-                break;
-            case "Dot":
-                gameObjectToDrag.transform.position = DotPos;
-                break;
-            case "Square":
-                gameObjectToDrag.transform.position = SquarePos;
-                break;
+            }
         }
         snap = false;
     }

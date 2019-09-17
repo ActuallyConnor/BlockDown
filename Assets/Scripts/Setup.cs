@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class Setup {
 
-    System.Random rand = new System.Random();
+    public Random rand = new Random();
 
     List<int> defaultBoard = new List<int> {
         0, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -127,7 +125,6 @@ public class Setup {
 
             if (temp.Distinct().Count() != temp.Count || again == true) {
                 again = false;
-                store = 0;
                 temp = onBoard.ToList();
                 oldp = rand.Next(0, onBoard.Count);
                 store = onBoard[oldp];
@@ -145,7 +142,6 @@ public class Setup {
 
                 if (temp.Distinct().Count() != temp.Count || again == true) {
                     again = false;
-                    store = 0;
                     temp = onBoard.ToList();
                     oldp = rand.Next(0, onBoard.Count);
                     store = onBoard[oldp];
@@ -155,13 +151,13 @@ public class Setup {
                     temp = CheckIfPieceFits(temp, store, toUse);
 
                     foreach (int t in temp) {
-                        if (t > 59 || t < 0) {
-                            again = true;
+                        again = PieceFitsInBoard(t);
+                        if (again == true) {
+                            break;
                         }
                     }
                     if (temp.Distinct().Count() != temp.Count || again == true) {
                         again = false;
-                        store = 0;
                         temp = onBoard.ToList();
                         oldp = rand.Next(0, onBoard.Count);
                         store = onBoard[oldp];
