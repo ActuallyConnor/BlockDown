@@ -27,6 +27,8 @@ public class Block : MonoBehaviour {
     public Vector3 SquarePos;
     public GameObject[] stop;
 
+    public bool selectedPiece = false;
+
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
         LPos = new Vector3(-3, -6, 0);
@@ -39,7 +41,28 @@ public class Block : MonoBehaviour {
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
+    float horizontal;
+    float vertical;
+    float prevHorizontal = 0;
+    float prevVertical = 0;
+
     void Update() {
+
+        if (selectedPiece)
+        {
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+            Vector3 currentObject = GameObject.Find("T").transform.position;
+
+            if ((horizontal != 0 && prevHorizontal == 0) || (vertical != 0 && prevVertical == 0))
+            {
+                Debug.Log("Horz: " + Input.GetAxis("Horizontal"));
+                Debug.Log("Vert: " + Input.GetAxis("Vertical"));
+                GameObject.Find("T").transform.position = new Vector3(currentObject.x + horizontal, currentObject.y + vertical, currentObject.z);
+            }
+            prevHorizontal = horizontal;
+            prevVertical = vertical;
+        }
 
         float gridY = GameObject.Find("Grid").transform.position.y;
         int wallCount = GameObject.Find("Grid").GetComponent<Wall>().count;

@@ -27,7 +27,7 @@ public class Wall : MonoBehaviour {
 
             PlayerPrefs.SetInt("highscore", highscore);
         }
-	}
+	} 
 
     void Update() {
 
