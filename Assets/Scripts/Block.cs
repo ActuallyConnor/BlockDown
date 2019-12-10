@@ -41,15 +41,12 @@ public class Block : MonoBehaviour {
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
-    float horizontal;
-    float vertical;
     float prevHorizontal = 0;
     float prevVertical = 0;
 
     void Update() {
 
-        if (selectedPiece)
-        {
+        if (selectedPiece) {
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
             Vector3 currentObject = GameObject.Find("T").transform.position;
@@ -333,4 +330,25 @@ public class Block : MonoBehaviour {
             }
         }
     }
+
+    float horizontal;
+    float vertical;
+    bool isLastJoyStickPositionCentered = true;
+
+    Vector3 getJoyStickPosition(Vector3 currentPiecePosition) {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+
+        if (Math.Abs(horizontal) > double.Epsilon && Math.Abs(vertical) > double.Epsilon) {
+            if (isLastJoyStickPositionCentered) {
+                isLastJoyStickPositionCentered = false;
+                return new Vector3(currentPiecePosition.x + horizontal, currentPiecePosition.y + vertical, currentPiecePosition.z);
+            }
+        } else {
+            isLastJoyStickPositionCentered = true;
+        }
+
+        return currentPiecePosition;
+    }
+
 }
