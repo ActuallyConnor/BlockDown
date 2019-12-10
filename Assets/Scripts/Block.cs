@@ -335,7 +335,7 @@ public class Block : MonoBehaviour {
     float vertical;
     bool isLastJoyStickPositionCentered = true;
 
-    Vector3 getJoyStickPosition(Vector3 currentPiecePosition) {
+    Vector3 GetJoyStickPosition(Vector3 currentPiecePosition) {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
 
@@ -349,6 +349,31 @@ public class Block : MonoBehaviour {
         }
 
         return currentPiecePosition;
+    }
+
+    int GetSelectedButton() {
+
+        int keyPressed = -1;
+
+        if (Input.GetKey("joystick button 0")) {
+            keyPressed = 0;
+        } else if (Input.GetKey("joystick button 1")) {
+            keyPressed = 1;
+        } else if (Input.GetKey("joystick button 2")) {
+            keyPressed = 2;
+        } else if (Input.GetKey("joystick button 3")) {
+            keyPressed = 3;
+        }
+
+        return keyPressed;
+    }
+
+    void MoveHighLight() {
+        if (GetSelectedButton() == 2) {
+            // Move highlight left
+        } else if (GetSelectedButton() == 3) {
+            // Move highlight right
+        }
     }
 
 }
