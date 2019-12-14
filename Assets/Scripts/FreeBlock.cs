@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -40,7 +41,18 @@ public class FreeBlock : MonoBehaviour {
     }
 
     void Update() {
-
+        MovePieceWithJoyStick();
+        int button = GetSelectedButton();    
+        if (button == 0) {
+            gameObjectToDrag = GameObject.Find("T");
+            Pythagorean();
+            Overlap();
+            Placed();
+            SinglePiecePutBack();
+            SendToBottom();
+            PlacingPieceWinsGame();
+            Resize();
+        }
     }
 
     public GameObject gameObjectToDrag;
@@ -294,6 +306,88 @@ public class FreeBlock : MonoBehaviour {
                     snap = false;
                 }
             }
+        }
+    }
+
+    public bool selectedPiece = false;
+
+    float prevHorizontal = 0;
+    float prevVertical = 0;
+
+    void MovePieceWithJoyStick() {
+        if (selectedPiece) {
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+            Vector3 currentObject = GameObject.Find("T").transform.position;
+
+            if (IsDirectionCentered(horizontal, prevHorizontal) || IsDirectionCentered(vertical, prevVertical)) {
+                Debug.Log("Horz: " + Input.GetAxis("Horizontal"));
+                Debug.Log("Vert: " + Input.GetAxis("Vertical"));
+                GameObject.Find("T").transform.position = new Vector3(currentObject.x + horizontal, currentObject.y + vertical, currentObject.z);
+            }
+            prevHorizontal = horizontal;
+            prevVertical = vertical;
+        }
+    }
+
+    bool IsDirectionCentered(float direction, float prevDirection) {
+
+        return Math.Abs(direction) > double.Epsilon && Math.Abs(prevDirection) < double.Epsilon;
+    }  
+
+    float horizontal;
+    float vertical;
+    bool isLastJoyStickPositionCentered = true;
+
+    Vector3 GetJoyStickPosition(Vector3 currentPiecePosition) {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+
+        if (Math.Abs(horizontal) > double.Epsilon && Math.Abs(vertical) > double.Epsilon) {
+            if (isLastJoyStickPositionCentered) {
+                isLastJoyStickPositionCentered = false;
+                return new Vector3(currentPiecePosition.x + horizontal, currentPiecePosition.y + vertical, currentPiecePosition.z);
+            }
+        } else {
+            isLastJoyStickPositionCentered = true;
+        }
+
+        return currentPiecePosition;
+    }
+
+    int keyPressed = -1;
+
+    int GetSelectedButton() {
+
+        TimeSpan elapsed = DateTime.Now - start;
+
+        if (elapsed.Milliseconds > 100) {
+            start = DateTime.Now;
+            if (Input.GetKey("joystick button 0")) {
+                keyPressed = 0;
+                Debug.Log("joystick button 0");
+            } else if (Input.GetKey("joystick button 1")) {
+                keyPressed = 1;
+                Debug.Log("joystick button 1");
+            } else if (Input.GetKey("joystick button 2")) {
+                keyPressed = 2;
+                Debug.Log("joystick button 2");
+            } else if (Input.GetKey("joystick button 3")) {
+                keyPressed = 3;
+                Debug.Log("joystick button 3");
+            }
+        }
+
+        return keyPressed;
+    }
+
+    DateTime start = DateTime.Now; 
+
+    void MoveHighLight() {
+        if (GetSelectedButton() == 2) {
+            // Move highlight left
+        } else if (GetSelectedButton() == 3) {
+            // Move highlight right
         }
     }
 }

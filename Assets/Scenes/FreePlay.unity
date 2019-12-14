@@ -130,25 +130,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 4
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 4
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 0
 --- !u!1 &223310126
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,25 +390,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 2
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 2
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 0
 --- !u!1 &505205959 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4633172962950584109, guid: ae26e48a6831761409b12e7867088068,
@@ -426,25 +428,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 3
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 3
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 0
 --- !u!1001 &520907649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1043,25 +1046,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 4
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 4
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 1
 --- !u!1 &1141531194 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7758924851157469403, guid: 2c187fad0293dc849bc7ca0d2954014e,
@@ -1080,25 +1084,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 3
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 3
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 0
 --- !u!1001 &1148315338
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1730,25 +1735,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7dccb0d07e984438eca6a262485c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToDrag: {fileID: 0}
-  GOCentre: {x: 0, y: 0, z: 0}
-  touchPosition: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
-  newGOCentre: {x: 0, y: 0, z: 0}
-  draggingMode: 0
   snap: 0
+  pieces: 1
+  count: 0
+  spots: []
+  check: []
+  onBoard: []
   TPos: {x: 0, y: 0, z: 0}
   LPos: {x: 0, y: 0, z: 0}
   LinePos: {x: 0, y: 0, z: 0}
   TwoPos: {x: 0, y: 0, z: 0}
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
-  pieces: 1
-  count: 0
   stop: []
-  spots: []
-  check: []
-  onBoard: []
+  gameObjectToDrag: {fileID: 0}
+  GOCentre: {x: 0, y: 0, z: 0}
+  touchPosition: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  newGOCentre: {x: 0, y: 0, z: 0}
+  draggingMode: 0
+  selectedPiece: 0
 --- !u!1001 &2068755865
 PrefabInstance:
   m_ObjectHideFlags: 0
