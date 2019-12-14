@@ -41,25 +41,7 @@ public class Block : MonoBehaviour {
         stop = GameObject.FindGameObjectsWithTag("Block");
     }
 
-    float prevHorizontal = 0;
-    float prevVertical = 0;
-
     void Update() {
-
-        if (selectedPiece) {
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-            Vector3 currentObject = GameObject.Find("T").transform.position;
-
-            if ((horizontal != 0 && prevHorizontal == 0) || (vertical != 0 && prevVertical == 0))
-            {
-                Debug.Log("Horz: " + Input.GetAxis("Horizontal"));
-                Debug.Log("Vert: " + Input.GetAxis("Vertical"));
-                GameObject.Find("T").transform.position = new Vector3(currentObject.x + horizontal, currentObject.y + vertical, currentObject.z);
-            }
-            prevHorizontal = horizontal;
-            prevVertical = vertical;
-        }
 
         float gridY = GameObject.Find("Grid").transform.position.y;
         int wallCount = GameObject.Find("Grid").GetComponent<Wall>().count;
@@ -328,51 +310,6 @@ public class Block : MonoBehaviour {
                     snap = false;
                 }
             }
-        }
-    }
-
-    float horizontal;
-    float vertical;
-    bool isLastJoyStickPositionCentered = true;
-
-    Vector3 GetJoyStickPosition(Vector3 currentPiecePosition) {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
-
-        if (Math.Abs(horizontal) > double.Epsilon && Math.Abs(vertical) > double.Epsilon) {
-            if (isLastJoyStickPositionCentered) {
-                isLastJoyStickPositionCentered = false;
-                return new Vector3(currentPiecePosition.x + horizontal, currentPiecePosition.y + vertical, currentPiecePosition.z);
-            }
-        } else {
-            isLastJoyStickPositionCentered = true;
-        }
-
-        return currentPiecePosition;
-    }
-
-    int GetSelectedButton() {
-
-        int keyPressed = -1;
-
-        if (Input.GetKey("joystick button 0")) {
-            keyPressed = 0;
-        } else if (Input.GetKey("joystick button 1")) {
-            keyPressed = 1;
-        } else if (Input.GetKey("joystick button 2")) {
-            keyPressed = 2;
-        } else if (Input.GetKey("joystick button 3")) {
-            keyPressed = 3;
-        }
-
-        return keyPressed;
-    }
-
-    void MoveHighLight() {
-        if (GetSelectedButton() == 2) {
-            // Move highlight left
-        } else if (GetSelectedButton() == 3) {
-            // Move highlight right
         }
     }
 

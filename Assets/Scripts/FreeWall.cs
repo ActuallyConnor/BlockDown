@@ -21,11 +21,11 @@ public class FreeWall : MonoBehaviour {
         LoadLevel();
         GameObject.Find("Text").GetComponent<TextMesh>().text = setups.GetPassed().ToString();
         PlayerPrefs.SetInt("score", setups.GetPassed());
-        int highscore = PlayerPrefs.GetInt("highscore", 0);
-        if (setups.GetPassed() > highscore) {
-            highscore = setups.GetPassed();
+        int freescore = PlayerPrefs.GetInt("freescore", 0);
+        if (setups.GetPassed() > freescore) {
+            freescore = setups.GetPassed();
 
-            PlayerPrefs.SetInt("highscore", highscore);
+            PlayerPrefs.SetInt("freescore", freescore);
         }
     }
 

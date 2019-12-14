@@ -99,6 +99,7 @@ public class ArcadeBlock : MonoBehaviour {
         if (Math.Abs(horizontal) > double.Epsilon && Math.Abs(vertical) > double.Epsilon) {
             if (isLastJoyStickPositionCentered) {
                 isLastJoyStickPositionCentered = false;
+				Debug.Log(currentPiecePosition.x + horizontal + ", " + currentPiecePosition.y + vertical);
                 return new Vector3(currentPiecePosition.x + horizontal, currentPiecePosition.y + vertical, currentPiecePosition.z);
             }
         } else {
@@ -182,121 +183,41 @@ public class ArcadeBlock : MonoBehaviour {
         }
     }
 
-    bool DoesPieceFitHere() {
-        spots = GameObject.FindGameObjectsWithTag("Blank");
-        //onBoard = GameObject.FindGameObjectsWithTag("Square");
+	bool DoesPieceFitHere() {
+		Pieces piecePositions = new Pieces(selectedObject.name, selectedObject.transform.position.x, selectedObject.transform.position.y);
+		float[,] pieceCoordinates = piecePositions.pieceCoordinates;
 
-        string pieceName = selectedObject.name;
+		float[,] blankCoordinates = GetBlankSpacesAsArray();
 
-        bool objectCanBePlaced = true;
+		bool pieceFitsHere = true;
 
-        for (int i = 1; i < 4; i++) {
-            foreach (GameObject tile in spots) {
-                if (GameObject.Find(pieceName + i) != null) {
+		for (int i = 0; i < pieceCoordinates.GetLength(0); i++) {
+			if (pieceFitsHere) {
+				for (int j = 0; j < blankCoordinates.GetLength(0); j++) {
+					if (AreFloatsEqual(pieceCoordinates[i, 0], blankCoordinates[j, 0]) && AreFloatsEqual(pieceCoordinates[i, 1], blankCoordinates[j, 1])) {
+						pieceFitsHere = false;
+					}
+				}
+			}
+		}
 
-                    if (Math.Abs(GameObject.Find(pieceName + i).transform.position.x - tile.transform.position.x) < double.Epsilon && Math.Abs(GameObject.Find(pieceName + i).transform.position.y - tile.transform.position.y) < double.Epsilon) {
-                        objectCanBePlaced = false;
-                        Debug.Log(pieceName + i + " doesn't fit");
-                    } else {
-                        Debug.Log(pieceName + i + " does fit");
-                    }
-                }
-            }
-        }
+		return pieceFitsHere;
+	}
 
-        return objectCanBePlaced;
+	float[,] GetBlankSpacesAsArray() {
+		GameObject[] blanks = GameObject.FindGameObjectsWithTag("Blank");
+		float[,] blankCoordinates = new float[17, 2];
+		int nCount = 0;
+		foreach (GameObject blank in blanks) {
+			blankCoordinates[nCount, 0] = blank.transform.position.x;
+			blankCoordinates[nCount, 1] = blank.transform.position.x;
+			nCount++;
+		}
+		return blankCoordinates;
+	}
 
-    }
-
-    void Pythagorean() {
-        spots = GameObject.FindGameObjectsWithTag("Blank");
-        onBoard = GameObject.FindGameObjectsWithTag("Block");
-        check.Clear();
-        foreach (GameObject spot in spots) {
-            check.Add(spot.transform.position);
-        }
-        float a;
-        float b;
-        float c;
-        float least = 1000;
-        fits = false;
-        Vector3 closest = TPos;
-        Vector3 second = TPos;
-        Vector3 third = TPos;
-        foreach (Vector3 che in check) {
-            a = selectedObject.transform.position.x - che.x;
-            b = selectedObject.transform.position.y - che.y;
-            a = Mathf.Pow(a, 2);
-            b = Mathf.Pow(b, 2);
-            c = a + b;
-            c = Mathf.Sqrt(c);
-            if (c < least && c < 1.5) {
-                third = second;
-                second = closest;
-                closest = che;
-                least = c;
-            }
-        }
-
-        selectedObject.transform.position = closest;
-        if (pieces > 1) {
-            for (int j = 1; j < 4; j++) {
-                if (GameObject.Find(selectedObject.name + j) != null) {
-                    if (check.Contains(GameObject.Find(selectedObject.name + j).transform.position)) {
-                        fits = true;
-                    } else {
-                        fits = false;
-                        snap = false;
-                        break;
-                    }
-                }
-            }
-        } else if (pieces == 1) {
-            fits = true;
-        }
-        if (fits == true) {
-            snap = true;
-        } else {
-            selectedObject.transform.position = second; // first spot failed
-            if (pieces > 1) {
-                for (int j = 1; j < 4; j++) {
-                    if (GameObject.Find(selectedObject.name + j) != null) {
-                        if (check.Contains(GameObject.Find(selectedObject.name + j).transform.position)) {
-                            fits = true;
-                        } else {
-                            fits = false;
-                            snap = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (fits == true) {
-                snap = true;
-            } else {
-                selectedObject.transform.position = third; // second spot failed
-                if (pieces > 1) {
-                    for (int j = 1; j < 4; j++) {
-                        if (GameObject.Find(selectedObject.name + j) != null) {
-                            if (check.Contains(GameObject.Find(selectedObject.name + j).transform.position)) {
-                                fits = true;
-                            } else {
-                                fits = false;
-                                snap = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (fits == true) {
-                    snap = true;
-                } else {
-                    //PutBack(); // third spot failed
-                    fits = false;
-                    snap = false;
-                }
-            }
-        }
-    }
+	bool AreFloatsEqual(float a, float b) {
+		return Math.Abs(a - b) < double.Epsilon;
+	}
 
 }
