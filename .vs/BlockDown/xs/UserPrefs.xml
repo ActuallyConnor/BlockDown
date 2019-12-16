@@ -1,10 +1,8 @@
 ﻿<Properties StartupConfiguration="{76DB84DB-7FDE-8E53-2F7E-095280548631}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ArcadeWall.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Block.cs">
     <Files>
-      <File FileName="Assets/Scripts/ArcadeWall.cs" Line="37" Column="1" />
-      <File FileName="Assets/Scripts/Setup.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Score.cs" Line="12" Column="97" />
-      <File FileName="Assets/Scripts/Wall.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="Assets/Scripts/ArcadeBlock.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Block.cs" Line="1" Column="1" NotebookId="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -12,7 +10,7 @@
           <Node name="BlockDown" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="ArcadeWall.cs" selected="True" />
+                <Node name="Block.cs" selected="True" />
               </Node>
             </Node>
           </Node>

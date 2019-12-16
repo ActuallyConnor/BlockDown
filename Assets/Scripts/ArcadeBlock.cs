@@ -206,7 +206,7 @@ public class ArcadeBlock : MonoBehaviour {
 
 	float[,] GetBlankSpacesAsArray() {
 		GameObject[] blanks = GameObject.FindGameObjectsWithTag("Blank");
-		float[,] blankCoordinates = new float[17, 2];
+		float[,] blankCoordinates = new float[blanks.Length, 2];
 		int nCount = 0;
 		foreach (GameObject blank in blanks) {
 			blankCoordinates[nCount, 0] = blank.transform.position.x;
@@ -218,6 +218,10 @@ public class ArcadeBlock : MonoBehaviour {
 
 	bool AreFloatsEqual(float a, float b) {
 		return Math.Abs(a - b) < double.Epsilon;
+	}
+
+	bool AreFloatsNotEqual(float a, float b) {
+		return Math.Abs(a - b) > double.Epsilon;
 	}
 
 }
