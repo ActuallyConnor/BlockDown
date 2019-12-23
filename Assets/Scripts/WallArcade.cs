@@ -7,7 +7,7 @@ public class WallArcade : MonoBehaviour {
 
     public GameObject[] squares;
     public bool stop = false;
-    public Setup setups = new Setup();
+    public SetupArcade setups = new SetupArcade();
     public int count = 0;
     System.Random rand = new System.Random();
     public Game game = new Game();

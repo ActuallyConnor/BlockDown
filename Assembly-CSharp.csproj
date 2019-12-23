@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\PlayClick.cs" />
     <Compile Include="Assets\Scripts\Score.cs" />
     <Compile Include="Assets\Scripts\Setup.cs" />
+    <Compile Include="Assets\Scripts\SetupArcade.cs" />
     <Compile Include="Assets\Scripts\Wall.cs" />
     <Compile Include="Assets\Scripts\WallArcade.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
