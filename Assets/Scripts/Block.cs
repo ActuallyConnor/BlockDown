@@ -313,4 +313,12 @@ public class Block : MonoBehaviour {
         }
     }
 
+	
+	float NewPythagorean(float pieceX, float pieceY, float spotX, float spotY) {
+		float a = Math.Abs(spotX - pieceX);
+		float b = Math.Abs(spotY - pieceY);
+		float c = (float)(Math.Pow(a, 2) + (float)Math.Pow(b, 2));
+		c = (float)Math.Sqrt(c);
+		return (float)1;
+	}
 }

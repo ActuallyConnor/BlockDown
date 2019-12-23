@@ -226,4 +226,8 @@ public class ArcadeBlock : MonoBehaviour {
 		return Math.Abs(a - b) < double.Epsilon;
 	}
 
+	bool AreFloatsNotEqual(float a, float b) {
+		return Math.Abs(a - b) > double.Epsilon;
+	}
+
 }
