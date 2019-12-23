@@ -40,17 +40,22 @@ public class ArcadeBlock : MonoBehaviour {
 
         selectedObject = GameObject.Find("T");
     }
-
+    int button;
+    int prevButton;
     void Update() {
         MovePieceWithJoyStick();
-        int button = GetSelectedButton();
-        if (button == 0) {
-            if (DoesPieceFitHere()) {
-                selectedObject = GameObject.Find("Line");
-                //Overlap();
-                //Placed();
-                //PlacingPieceWinsGame();
-            }
+        prevButton = button;
+        button = GetSelectedButton();
+        if (button == 0 && button != prevButton) {
+            DoesPieceFitHere();
+            //Debug.Log(DoesPieceFitHere());
+            //if (DoesPieceFitHere()) {
+            //    selectedObject = GameObject.Find("Line");
+            //    //Overlap();
+            //    //Placed();
+            //    //PlacingPieceWinsGame();
+            //}
+
         }
     }
 
@@ -68,19 +73,16 @@ public class ArcadeBlock : MonoBehaviour {
     float prevVertical = 0;
 
     void MovePieceWithJoyStick() {
-        //if (selectedPiece) {
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-            Vector3 currentObject = GameObject.Find("T").transform.position;
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+        Vector3 currentObject = selectedObject.transform.position;
 
-            if (IsDirectionCentered(horizontal, prevHorizontal) || IsDirectionCentered(vertical, prevVertical)) {
-                //Debug.Log("Horz: " + Input.GetAxis("Horizontal"));
-                //Debug.Log("Vert: " + Input.GetAxis("Vertical"));
-                selectedObject.transform.position = new Vector3(currentObject.x + horizontal, currentObject.y + vertical, currentObject.z);
-            }
-            prevHorizontal = horizontal;
-            prevVertical = vertical;
-        //}
+        if (IsDirectionCentered(horizontal, prevHorizontal) || IsDirectionCentered(vertical, prevVertical)) {
+            selectedObject.transform.position = new Vector3(currentObject.x + horizontal, currentObject.y + vertical, currentObject.z);
+            //Debug.Log(selectedObject.transform.position.x + ", " + selectedObject.transform.position.y);
+        }
+        prevHorizontal = horizontal;
+        prevVertical = vertical;
     }
 
     bool IsDirectionCentered(float direction, float prevDirection) {
@@ -99,7 +101,6 @@ public class ArcadeBlock : MonoBehaviour {
         if (Math.Abs(horizontal) > double.Epsilon && Math.Abs(vertical) > double.Epsilon) {
             if (isLastJoyStickPositionCentered) {
                 isLastJoyStickPositionCentered = false;
-				Debug.Log(currentPiecePosition.x + horizontal + ", " + currentPiecePosition.y + vertical);
                 return new Vector3(currentPiecePosition.x + horizontal, currentPiecePosition.y + vertical, currentPiecePosition.z);
             }
         } else {
@@ -119,16 +120,14 @@ public class ArcadeBlock : MonoBehaviour {
             start = DateTime.Now;
             if (Input.GetKey("joystick button 0")) {
                 keyPressed = 0;
-                //Debug.Log("joystick button 0");
             } else if (Input.GetKey("joystick button 1")) {
                 keyPressed = 1;
-                //Debug.Log("joystick button 1");
             } else if (Input.GetKey("joystick button 2")) {
                 keyPressed = 2;
-                //Debug.Log("joystick button 2");
             } else if (Input.GetKey("joystick button 3")) {
                 keyPressed = 3;
-                //Debug.Log("joystick button 3");
+            } else {
+                keyPressed = -1;
             }
         }
 
@@ -146,7 +145,7 @@ public class ArcadeBlock : MonoBehaviour {
         }
     }
 
-    void Overlap() {
+    bool Overlap() {
         string[] shapes = { "T", "L", "Line", "Two", "Dot", "Square" };
         List<Vector3> piece = new List<Vector3>();
         List<Vector3> onBoard = new List<Vector3>();
@@ -169,9 +168,11 @@ public class ArcadeBlock : MonoBehaviour {
             for (int j = 0; j < onBoard.Count; j++) {
                 if (piece[i] == onBoard[j]) {
                     //Reset();
+                    return false;
                 }
             }
         }
+        return true;
     }
 
     void Placed() {
@@ -188,25 +189,30 @@ public class ArcadeBlock : MonoBehaviour {
 		float[,] pieceCoordinates = piecePositions.pieceCoordinates;
 
 		float[,] blankCoordinates = GetBlankSpacesAsArray();
+        //for (int i = 0; i < blankCoordinates.Length; i++) {
+        //    Debug.Log(blankCoordinates[i, 0] + ", " + blankCoordinates[i, 1]);
+        //}
 
-		bool pieceFitsHere = true;
-
+        bool pieceFitsHere = true;
 		for (int i = 0; i < pieceCoordinates.GetLength(0); i++) {
 			if (pieceFitsHere) {
 				for (int j = 0; j < blankCoordinates.GetLength(0); j++) {
 					if (AreFloatsEqual(pieceCoordinates[i, 0], blankCoordinates[j, 0]) && AreFloatsEqual(pieceCoordinates[i, 1], blankCoordinates[j, 1])) {
 						pieceFitsHere = false;
+                        break;
 					}
 				}
-			}
+			} else {
+                break;
+            }
 		}
-
+        Debug.Log(pieceFitsHere);
 		return pieceFitsHere;
 	}
 
 	float[,] GetBlankSpacesAsArray() {
 		GameObject[] blanks = GameObject.FindGameObjectsWithTag("Blank");
-		float[,] blankCoordinates = new float[17, 2];
+		float[,] blankCoordinates = new float[blanks.Length, 2];
 		int nCount = 0;
 		foreach (GameObject blank in blanks) {
 			blankCoordinates[nCount, 0] = blank.transform.position.x;
