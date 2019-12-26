@@ -63,8 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\ArcadeBlock.cs" />
-    <Compile Include="Assets\Scripts\ArcadeWall.cs" />
     <Compile Include="Assets\Scripts\Block.cs" />
     <Compile Include="Assets\Scripts\BlockArcade.cs" />
     <Compile Include="Assets\Scripts\BottomMenu.cs" />

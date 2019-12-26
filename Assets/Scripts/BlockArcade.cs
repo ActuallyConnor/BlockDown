@@ -27,7 +27,7 @@ public class BlockArcade : MonoBehaviour {
     public Vector3 SquarePos;
     public GameObject[] stop;
 
-    public int pieceIndex = 0;
+    public int pieceIndex = -1;
 
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
@@ -40,7 +40,7 @@ public class BlockArcade : MonoBehaviour {
 
         stop = GameObject.FindGameObjectsWithTag("Block");
         gameObjectToDrag = GameObject.Find("T");
-        SetPieceProperties(pieceIndex);
+        SetPieceProperties(pieceIndex++);
     }
 
     int button;
@@ -209,11 +209,17 @@ public class BlockArcade : MonoBehaviour {
         if (snap == true) {
             GameObject.Find("Grid").GetComponent<WallArcade>().count += pieces;
             GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
-            pieceIndex++;
-            SetPieceProperties(pieceIndex);
+            ResetPieceIndex();
+            SetPieceProperties(pieceIndex++);
 
         } else {
             GameObject.Find("woosh").GetComponent<PlayClick>().PlayAudio();
+        }
+    }
+
+    void ResetPieceIndex() {
+        if (pieceIndex++ > 5) {
+            pieceIndex = -1;
         }
     }
 
@@ -342,5 +348,12 @@ public class BlockArcade : MonoBehaviour {
         }
 
         return keyPressed;
+    }
+
+    void SwitchSelectedPiece(string pieceName) {
+        if (GetSelectedButton() == 1) {
+            ResetPieceIndex();
+            SetPieceProperties(pieceIndex++);
+        }
     }
 }
