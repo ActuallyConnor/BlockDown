@@ -27,6 +27,7 @@ public class WallArcade : MonoBehaviour {
 
             PlayerPrefs.SetInt("highscore", highscore);
         }
+        Debug.Log(setups.GetPassed());
     }
 
     void Update() {

@@ -24,14 +24,14 @@ public class SetupArcade {
         int[] checkpoints = { -1, 2, 7, 13, 19 };
         int[] createNumbers = { 2, 3, 4, 5, 6 };
 
-        //for (int i = checkpoints.Length - 1; i > -1; i--) {
-        //    if (GetPassed() >= checkpoints[i]) {
-        //        created = Create(createNumbers[i]);
-        //        break;
-        //    }
-        //}
+        for (int i = checkpoints.Length - 1; i > -1; i--) {
+            if (GetPassed() >= checkpoints[i]) {
+                created = Create(6/*createNumbers[i]*/);
+                break;
+            }
+        }
 
-        created = Create(6);
+        //created = Create(6);
 
         presets.Add(created);
     }
