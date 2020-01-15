@@ -2,9 +2,8 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BlockArcade.cs">
     <Files>
       <File FileName="Assets/Scripts/SetupArcade.cs" Line="34" Column="31" />
-      <File FileName="Assets/Scripts/BlockArcade.cs" Line="68" Column="34" />
-      <File FileName="Assets/Scripts/WallArcade.cs" Line="30" Column="39" />
-      <File FileName="Assets/Scripts/Score.cs" />
+      <File FileName="Assets/Scripts/BlockArcade.cs" Line="89" Column="97" />
+      <File FileName="Assets/Scripts/WallArcade.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,7 +21,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="abcb8e4d-3c81-46f6-afd4-98a78be07d14" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="e5537fd7-53d5-4a1c-adf1-f04f9e75c65f" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

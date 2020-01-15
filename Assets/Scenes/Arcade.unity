@@ -423,12 +423,14 @@ MonoBehaviour:
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
+  pieceIndex: 0
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
   offset: {x: 0, y: 0, z: 0}
   newGOCentre: {x: 0, y: 0, z: 0}
   draggingMode: 0
+  sprite: {fileID: 0}
 --- !u!1001 &286172769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -537,9 +539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060db74912b074e3e83ad44b6097dcc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squares: []
-  stop: 0
-  count: 0
 --- !u!1 &481071972
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,20 +1285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29631d31ab5db41f2aa0aab6f61f36ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snap: 0
-  pieces: 0
-  count: 0
-  spots: []
-  check: []
-  onBoard: []
-  TPos: {x: 0, y: 0, z: 0}
-  LPos: {x: 0, y: 0, z: 0}
-  LinePos: {x: 0, y: 0, z: 0}
-  TwoPos: {x: 0, y: 0, z: 0}
-  DotPos: {x: 0, y: 0, z: 0}
-  SquarePos: {x: 0, y: 0, z: 0}
-  stop: []
-  selectedObject: {fileID: 0}
 --- !u!114 &1236727422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1325,12 +1310,14 @@ MonoBehaviour:
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
+  pieceIndex: 0
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
   offset: {x: 0, y: 0, z: 0}
   newGOCentre: {x: 0, y: 0, z: 0}
   draggingMode: 0
+  sprite: {fileID: 0}
 --- !u!1 &1559647268
 GameObject:
   m_ObjectHideFlags: 0
@@ -1981,6 +1968,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: T3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4210482319121365168, guid: aa405ccb4045cb04ab70c9e19d32c574, type: 3}

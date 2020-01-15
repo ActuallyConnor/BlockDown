@@ -53,7 +53,10 @@ public class BlockArcade : MonoBehaviour {
         if (button == 0 && button != prevButton) {
             OnButtonPress();
         }
-    }
+		if (button == 1 && button != prevButton) {
+			SwitchSelectedPiece();
+		}
+	}
 
     public GameObject gameObjectToDrag;
     public Vector3 GOCentre;
@@ -62,9 +65,12 @@ public class BlockArcade : MonoBehaviour {
     public Vector3 newGOCentre;
     RaycastHit hit;
     public bool draggingMode = false;
+	public SpriteRenderer sprite;
 
     void SetPieceProperties(int indexOfNextPiece) {
-        if (indexOfNextPiece == -1) {
+		//string rotatePieceName;
+		//gameObjectToDrag.transform.position = new Vector3(gameObjectToDrag.transform.position.x, gameObjectToDrag.transform.position.y, 0);
+		if (indexOfNextPiece == -1) {
             indexOfNextPiece = 0;
         }
         Debug.Log(indexOfNextPiece);
@@ -73,6 +79,16 @@ public class BlockArcade : MonoBehaviour {
         draggingMode = true;
         SendToTop();
         gameObjectToDrag = GameObject.Find(pieceTypes[indexOfNextPiece]);
+
+		//if (gameObjectToDrag.name + "1" != null) {
+		//	rotatePieceName = gameObjectToDrag.name + "1";
+		//} else {
+		//	rotatePieceName = gameObjectToDrag.name;
+		//}
+		//Debug.Log(rotatePieceName);
+		//GameObject.Find(rotatePieceName).transform.rotation.Set(0, 0, 45, 0);
+		//gameObjectToDrag.transform.rotation = new Quaternion(rotatePiecePos.x, rotatePiecePos.y, 45, 0);
+
         pieces = pieceNumbers[indexOfNextPiece];
     }
 
@@ -348,10 +364,10 @@ public class BlockArcade : MonoBehaviour {
         return keyPressed;
     }
 
-    void SwitchSelectedPiece(string pieceName) {
+    void SwitchSelectedPiece() {
         if (GetSelectedButton() == 1) {
             pieceIndex++;
-            SetPieceProperties(pieceIndex % 5);
+            SetPieceProperties(pieceIndex % 6);
         }
     }
 }
