@@ -423,6 +423,8 @@ MonoBehaviour:
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
+  pieceIndex: 0
+  piecesOnWall: []
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
@@ -537,9 +539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060db74912b074e3e83ad44b6097dcc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squares: []
-  stop: 0
-  count: 0
 --- !u!1 &481071972
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,20 +1285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29631d31ab5db41f2aa0aab6f61f36ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snap: 0
-  pieces: 0
-  count: 0
-  spots: []
-  check: []
-  onBoard: []
-  TPos: {x: 0, y: 0, z: 0}
-  LPos: {x: 0, y: 0, z: 0}
-  LinePos: {x: 0, y: 0, z: 0}
-  TwoPos: {x: 0, y: 0, z: 0}
-  DotPos: {x: 0, y: 0, z: 0}
-  SquarePos: {x: 0, y: 0, z: 0}
-  stop: []
-  selectedObject: {fileID: 0}
 --- !u!114 &1236727422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1325,6 +1310,8 @@ MonoBehaviour:
   DotPos: {x: 0, y: 0, z: 0}
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
+  pieceIndex: 0
+  piecesOnWall: []
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
@@ -1734,6 +1721,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: L2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400065600200711632, guid: 2c187fad0293dc849bc7ca0d2954014e,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400065600200711632, guid: 2c187fad0293dc849bc7ca0d2954014e,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400065600200711632, guid: 2c187fad0293dc849bc7ca0d2954014e,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2131729533285139784, guid: 2c187fad0293dc849bc7ca0d2954014e, type: 3}

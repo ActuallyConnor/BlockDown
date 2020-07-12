@@ -29,6 +29,8 @@ public class BlockArcade : MonoBehaviour {
 
     public int pieceIndex = 0;
 
+    public string[] piecesOnWall = new string[6];
+
     void Start() {
         TPos = new Vector3((float)-0.5, -6, 0);
         LPos = new Vector3(-3, -6, 0);
@@ -45,13 +47,15 @@ public class BlockArcade : MonoBehaviour {
 
     int button;
     int prevButton;
+
     void Update() {
         gameObjectToDrag.transform.position = GetNewPosition(gameObjectToDrag.transform.position);
-        //Debug.Log(GetSelectedButton());
         prevButton = button;
         button = GetSelectedButton();
         if (button == 0 && button != prevButton) {
             OnButtonPress();
+        } else if (button == 1 && button != prevButton) {
+            SwitchSelectedPiece();
         }
     }
 
@@ -64,24 +68,17 @@ public class BlockArcade : MonoBehaviour {
     public bool draggingMode = false;
 
     void SetPieceProperties(int indexOfNextPiece) {
+        gameObjectToDrag.GetComponent<SpriteRenderer>().color = Color.white;
         if (indexOfNextPiece == -1) {
             indexOfNextPiece = 0;
         }
-        Debug.Log(indexOfNextPiece);
         string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
         int[] pieceNumbers = { 4, 3, 4, 3, 2, 1 };
         draggingMode = true;
         SendToTop();
         gameObjectToDrag = GameObject.Find(pieceTypes[indexOfNextPiece]);
+        gameObjectToDrag.GetComponent<SpriteRenderer>().color = Color.gray;
         pieces = pieceNumbers[indexOfNextPiece];
-    }
-
-    void PieceIsMoving() {
-        if (draggingMode) {
-            //touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //newGOCentre = touchPosition - offset;
-            //gameObjectToDrag.transform.position = new Vector3(newGOCentre.x, newGOCentre.y, GOCentre.z);
-        }
     }
 
     void OnButtonPress() {
@@ -119,13 +116,13 @@ public class BlockArcade : MonoBehaviour {
 
     void Resize() {
         if (gameObjectToDrag.transform.position.y > -6) {
-            setPieceSize(gameObjectToDrag.name, 0f);
+            SetPieceSize(gameObjectToDrag.name, 0f);
         } else {
-            setPieceSize(gameObjectToDrag.name, 0.5f);
+            SetPieceSize(gameObjectToDrag.name, 0.5f);
         }
     }
 
-    void setPieceSize(string currentPiece, float increment) {
+    void SetPieceSize(string currentPiece, float increment) {
         string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
         float[,] positioning = { { 3f, 2f }, { 2f, 2f }, { 2f, 2f }, { 3f, 1f }, { 2f, 1f }, { 1f, 1f } };
         BoxCollider currentBox = gameObjectToDrag.GetComponent<BoxCollider>();
@@ -213,6 +210,7 @@ public class BlockArcade : MonoBehaviour {
         if (snap == true) {
             GameObject.Find("Grid").GetComponent<WallArcade>().count += pieces;
             GameObject.Find("click").GetComponent<PlayClick>().PlayAudio();
+            AddPieceToPiecesOnWall(gameObjectToDrag.name);
             pieceIndex++;
             SetPieceProperties(pieceIndex % 5);
 
@@ -227,7 +225,6 @@ public class BlockArcade : MonoBehaviour {
         check.Clear();
         foreach (GameObject spot in spots) {
             check.Add(spot.transform.position);
-            Debug.Log(spot.name + ": " + spot.transform.position.x + ", " + spot.transform.position.y);
         }
         float a;
         float b;
@@ -313,6 +310,27 @@ public class BlockArcade : MonoBehaviour {
         }
     }
 
+    void AddPieceToPiecesOnWall(string gameObjectName) {
+        for (int i = 0; i < piecesOnWall.Length; i++) {
+            if (piecesOnWall[i] == null && piecesOnWall[i - 1] != null) {
+                piecesOnWall[i] = gameObjectName;
+            }
+        }
+    }
+
+    void PiecePlacedOnWallHasMoved(string gameObjectName) {
+        for (int i = 0; i < piecesOnWall.Length; i++) {
+            if (string.Equals(piecesOnWall[i], gameObjectName)) {
+                piecesOnWall[i] = null;
+                for (int j = i + 1; j < piecesOnWall.Length; j++) {
+                    if (piecesOnWall[j] != null) {
+                        piecesOnWall[j - 1] = piecesOnWall[j];
+                    }
+                }
+            }
+        }
+    }
+
     float horizontal;
     float vertical;
     float movementMultiplier = 0.1f;
@@ -320,6 +338,10 @@ public class BlockArcade : MonoBehaviour {
     Vector3 GetNewPosition(Vector3 currentPiecePosition) {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+
+        if (horizontal != 0 && vertical != 0) {
+            PiecePlacedOnWallHasMoved(gameObjectToDrag.name);
+        }
 
         return new Vector3(currentPiecePosition.x + movementMultiplier * horizontal, currentPiecePosition.y + movementMultiplier * vertical, currentPiecePosition.z);
     }
@@ -344,14 +366,13 @@ public class BlockArcade : MonoBehaviour {
                 keyPressed = -1;
             }
         }
-
         return keyPressed;
     }
 
-    void SwitchSelectedPiece(string pieceName) {
+    void SwitchSelectedPiece() {
         if (GetSelectedButton() == 1) {
             pieceIndex++;
-            SetPieceProperties(pieceIndex % 5);
+            SetPieceProperties(pieceIndex % 6);
         }
     }
 }
