@@ -14,7 +14,6 @@ public class Block : MonoBehaviour {
     List<Vector3> wall;
     public int count = 0;
     public GameObject[] spots;
-    public List<Vector3> check = new List<Vector3>();
     public GameObject[] onBoard;
     bool fits;
 
@@ -94,7 +93,7 @@ public class Block : MonoBehaviour {
 
     void OnMouseUp() {
         draggingMode = false;
-        Pythagorean();
+        SnapPieceToClosestOpenSqareOrPutBack();
         Overlap();
         Placed();
         SinglePiecePutBack();
@@ -220,94 +219,151 @@ public class Block : MonoBehaviour {
         }
     }
 
-    void Pythagorean() {
+
+    private float a;
+    private float b;
+    private float c;
+
+    private Vector3 closest;
+    private Vector3 second;
+    private Vector3 third;
+
+    public List<Vector3> check = new List<Vector3>();
+
+    void SnapPieceToClosestOpenSqareOrPutBack()
+    {
+        GenerateVirtualBoard();
+
+        DetermineClosestBlock();
+
+        gameObjectToDrag.transform.position = closest;
+        HandleIfIsSinglePiece();
+
+        PythagoreanOperations();
+    }
+
+    private void GenerateVirtualBoard()
+    {
         spots = GameObject.FindGameObjectsWithTag("Blank");
         onBoard = GameObject.FindGameObjectsWithTag("Block");
         check.Clear();
-        foreach (GameObject spot in spots) {
+        foreach (GameObject spot in spots)
+        {
             check.Add(spot.transform.position);
         }
-        float a;
-        float b;
-        float c;
+    }
+
+    private void DetermineClosestBlock()
+    {
         float least = 1000;
         fits = false;
-        Vector3 closest = TPos;
-        Vector3 second = TPos;
-        Vector3 third = TPos;
-        foreach (Vector3 che in check) {
+        closest = TPos;
+        second = TPos;
+        third = TPos;
+        foreach (Vector3 che in check)
+        {
             a = gameObjectToDrag.transform.position.x - che.x;
             b = gameObjectToDrag.transform.position.y - che.y;
             a = Mathf.Pow(a, 2);
             b = Mathf.Pow(b, 2);
             c = a + b;
             c = Mathf.Sqrt(c);
-            if (c < least && c < 1.5) {
+            if (c < least && c < 1.5)
+            {
                 third = second;
                 second = closest;
                 closest = che;
                 least = c;
             }
         }
+    }
 
-        gameObjectToDrag.transform.position = closest;
-        if (pieces > 1) {
-            for (int j = 1; j < 4; j++) {
-                if (GameObject.Find(gameObjectToDrag.name + j) != null) {
-                    if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
+    private void HandleIfIsSinglePiece()
+    {
+        if (pieces == 1)
+        {
+            fits = true;
+        } else if (pieces > 1)
+        {
+            for (int j = 1; j < 4; j++)
+            {
+                if (GameObject.Find(gameObjectToDrag.name + j) != null)
+                {
+                    if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position))
+                    {
                         fits = true;
-                    } else {
+                    }
+                    else
+                    {
                         fits = false;
                         snap = false;
                         break;
                     }
                 }
             }
-        } else if (pieces == 1) {
-            fits = true;
-        }
-        if (fits == true) {
-            snap = true;  
-        } else {
-            gameObjectToDrag.transform.position = second; // first spot failed
-            if (pieces > 1) {
-                for (int j = 1; j < 4; j++) {
-                    if (GameObject.Find(gameObjectToDrag.name + j) != null) {
-                        if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
-                            fits = true;
-                        } else {
-                            fits = false;
-                            snap = false;
-                            break;
-                        }
-                    }
-                }
+        }       
+    }
+
+    private void PythagoreanOperations()
+    {
+        if (!NthPythagorean(second))
+        {
+            if (!NthPythagorean(third))
+            {
+                LastPythagorean();
             }
-            if (fits == true) {
-                snap = true;
-            } else {
-                gameObjectToDrag.transform.position = third; // second spot failed
-                if (pieces > 1) {
-                    for (int j = 1; j < 4; j++) {
-                        if (GameObject.Find(gameObjectToDrag.name + j) != null) {
-                            if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position)) {
-                                fits = true;
-                            } else {
-                                fits = false;
-                                snap = false;
-                                break;
-                            }
-                        }
+        }     
+    }
+
+    private bool NthPythagorean(Vector3 nthSpot)
+    {
+        if (fits)
+        {
+            snap = true;
+            return true;
+        }
+        else
+        {
+            gameObjectToDrag.transform.position = nthSpot; // first spot failed            
+            LoopAndDetermineIfFitsAndSnaps();
+            return false;
+        }
+    }    
+
+    private void LastPythagorean()
+    {
+        if (fits)
+        {
+            snap = true;
+        }
+        else
+        {
+            PutBack(); // third spot failed
+            fits = false;
+            snap = false;
+        }
+    }
+
+    private void LoopAndDetermineIfFitsAndSnaps() {
+        if (pieces > 1)
+        {
+            for (int j = 1; j < 4; j++)
+            {
+                if (GameObject.Find(gameObjectToDrag.name + j) != null)
+                {
+                    if (check.Contains(GameObject.Find(gameObjectToDrag.name + j).transform.position))
+                    {
+                        fits = true;
                     }
-                }
-                if (fits == true) {
-                    snap = true;
-                } else {
-                    PutBack(); // third spot failed
-                    fits = false;
-                    snap = false;
+                    else
+                    {
+                        fits = false;
+                        snap = false;
+                        break;
+                    }
                 }
             }
         }
     }
+
 }
