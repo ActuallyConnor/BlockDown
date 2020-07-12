@@ -57,7 +57,10 @@ public class BlockArcade : MonoBehaviour {
         } else if (button == 1 && button != prevButton) {
             SwitchSelectedPiece();
         }
-    }
+		if (button == 1 && button != prevButton) {
+			SwitchSelectedPiece();
+		}
+	}
 
     public GameObject gameObjectToDrag;
     public Vector3 GOCentre;
@@ -66,10 +69,17 @@ public class BlockArcade : MonoBehaviour {
     public Vector3 newGOCentre;
     RaycastHit hit;
     public bool draggingMode = false;
+	public SpriteRenderer sprite;
 
     void SetPieceProperties(int indexOfNextPiece) {
+<<<<<<< HEAD
         gameObjectToDrag.GetComponent<SpriteRenderer>().color = Color.white;
         if (indexOfNextPiece == -1) {
+=======
+		//string rotatePieceName;
+		//gameObjectToDrag.transform.position = new Vector3(gameObjectToDrag.transform.position.x, gameObjectToDrag.transform.position.y, 0);
+		if (indexOfNextPiece == -1) {
+>>>>>>> 2e10de399a1846b8c9a4eb056eb194a9a4629094
             indexOfNextPiece = 0;
         }
         string[] pieceTypes = { "T", "L", "Square", "Line", "Two", "Dot" };
@@ -77,7 +87,20 @@ public class BlockArcade : MonoBehaviour {
         draggingMode = true;
         SendToTop();
         gameObjectToDrag = GameObject.Find(pieceTypes[indexOfNextPiece]);
+<<<<<<< HEAD
         gameObjectToDrag.GetComponent<SpriteRenderer>().color = Color.gray;
+=======
+
+		//if (gameObjectToDrag.name + "1" != null) {
+		//	rotatePieceName = gameObjectToDrag.name + "1";
+		//} else {
+		//	rotatePieceName = gameObjectToDrag.name;
+		//}
+		//Debug.Log(rotatePieceName);
+		//GameObject.Find(rotatePieceName).transform.rotation.Set(0, 0, 45, 0);
+		//gameObjectToDrag.transform.rotation = new Quaternion(rotatePiecePos.x, rotatePiecePos.y, 45, 0);
+
+>>>>>>> 2e10de399a1846b8c9a4eb056eb194a9a4629094
         pieces = pieceNumbers[indexOfNextPiece];
     }
 

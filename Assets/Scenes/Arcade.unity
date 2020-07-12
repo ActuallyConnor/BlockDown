@@ -424,13 +424,17 @@ MonoBehaviour:
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
   pieceIndex: 0
+<<<<<<< HEAD
   piecesOnWall: []
+=======
+>>>>>>> 2e10de399a1846b8c9a4eb056eb194a9a4629094
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
   offset: {x: 0, y: 0, z: 0}
   newGOCentre: {x: 0, y: 0, z: 0}
   draggingMode: 0
+  sprite: {fileID: 0}
 --- !u!1001 &286172769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1311,13 +1315,17 @@ MonoBehaviour:
   SquarePos: {x: 0, y: 0, z: 0}
   stop: []
   pieceIndex: 0
+<<<<<<< HEAD
   piecesOnWall: []
+=======
+>>>>>>> 2e10de399a1846b8c9a4eb056eb194a9a4629094
   gameObjectToDrag: {fileID: 0}
   GOCentre: {x: 0, y: 0, z: 0}
   touchPosition: {x: 0, y: 0, z: 0}
   offset: {x: 0, y: 0, z: 0}
   newGOCentre: {x: 0, y: 0, z: 0}
   draggingMode: 0
+  sprite: {fileID: 0}
 --- !u!1 &1559647268
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,6 +1991,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: T3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868559350902294308, guid: aa405ccb4045cb04ab70c9e19d32c574,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4210482319121365168, guid: aa405ccb4045cb04ab70c9e19d32c574, type: 3}
